@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#C62828">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Lifeline – نظام التبرع بالدم</title>
+<title>Lifeline – تطبيق التبرع بالدم</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -360,6 +360,27 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
   .hero h1{font-size:24px}
   .blood-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* SIDEBAR */
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9997}
+.sb-ov.show{display:block}
+.sidebar{position:fixed;right:-280px;top:0;bottom:0;width:270px;background:linear-gradient(180deg,#0D0D1A,#1A1A2E);z-index:9998;transition:right .3s ease;display:flex;flex-direction:column}
+.sidebar.open{right:0}
+.sb-head{background:linear-gradient(135deg,#C62828,#E53935);padding:16px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sb-av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#fff;flex-shrink:0}
+.sb-nm{font-size:13px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-rl{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+.sb-x{background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0}
+.sb-body{flex:1;overflow-y:auto;padding:4px 0}
+.sb-btn{display:flex;align-items:center;gap:12px;padding:13px 18px;width:100%;background:none;border:none;border-right:3px solid transparent;color:rgba(255,255,255,.6);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;text-align:right;transition:.15s}
+.sb-btn:hover{background:rgba(255,255,255,.06);color:#fff;border-right-color:rgba(198,40,40,.5)}
+.sb-btn.on{background:rgba(198,40,40,.15);color:#fff;border-right-color:#C62828}
+.sb-btn.admin-only{display:none}
+.sb-ico{font-size:19px;flex-shrink:0;width:22px;text-align:center}
+.sb-div{height:1px;background:rgba(255,255,255,.08);margin:3px 14px}
+.sb-foot{border-top:1px solid rgba(255,255,255,.08);padding:4px 0;flex-shrink:0}
+.menu-btn{background:rgba(255,255,255,.1);border:none;width:36px;height:36px;border-radius:9px;cursor:pointer;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
+.menu-btn:hover{background:rgba(255,255,255,.2)}
 </style>
 </head>
 <body>
@@ -376,7 +397,7 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
   <div class="login-left">
     <div class="logo-wrap">🩸</div>
     <div class="brand-name">Lifeline</div>
-    <div class="brand-sub">نظام التبرع بالدم في العراق</div>
+    <div class="brand-sub">تطبيق التبرع بالدم في العراق</div>
     <div class="brand-stats">
       <div class="bstat"><div class="bstat-num" id="ls1">0</div><div class="bstat-lbl">متبرع</div></div>
       <div class="bstat-div"></div>
@@ -458,18 +479,8 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
   <nav>
     <div class="nav-inner">
       <div class="nlogo"><div class="nlicon">🩸</div> Lifeline</div>
-      <div class="ntabs">
-        <button class="tab active" onclick="showPage('home',this)">🏠 <span class="tl">الرئيسية</span></button>
-        <button class="tab" onclick="showPage('search',this)">🔍 <span class="tl">البحث</span></button>
-        <button class="tab" onclick="showPage('requests',this)">🩸 <span class="tl">الطلبات</span></button>
-        <button class="tab" onclick="showPage('map',this)">🗺️ <span class="tl">الخريطة</span></button>
-        <button class="tab" onclick="showPage('health',this)">💊 <span class="tl">صحتي</span></button>
-        <button class="tab" onclick="showPage('donate',this)">❤️ <span class="tl">تبرع بالدم</span></button>
-        <button class="tab" onclick="showPage('chat',this)">💬 <span class="tl">الرسائل</span></button>
-        <button class="tab admin-only" onclick="showPage('admin',this)" style="display:none">⚙️ <span class="tl">الإدارة</span></button>
-        <button class="tab" onclick="showPage('profile',this)">👤 <span class="tl">حسابي</span></button>
-      </div>
       <div class="nuser">
+        <button class="menu-btn" onclick="openSB()">☰</button>
         <button class="nbell" onclick="toggleNotif()" id="bellBtn">
           🔔<span class="nbadge" id="notifCount" style="display:none">0</span>
         </button>
@@ -481,6 +492,35 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       </div>
     </div>
   </nav>
+
+  <div class="sb-ov" id="sbOv" onclick="closeSB()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <div class="sb-av" id="sbAv">م</div>
+      <div style="flex:1;min-width:0">
+        <div class="sb-nm" id="sbNm">المستخدم</div>
+        <div class="sb-rl" id="sbRl">مستخدم</div>
+      </div>
+      <button class="sb-x" onclick="closeSB()">×</button>
+    </div>
+    <div class="sb-body">
+      <button class="sb-btn on" id="sn-home"     onclick="goP('home')">    <span class="sb-ico">🏠</span>الرئيسية</button>
+      <button class="sb-btn"   id="sn-search"   onclick="goP('search')">   <span class="sb-ico">🔍</span>البحث عن متبرع</button>
+      <button class="sb-btn"   id="sn-requests" onclick="goP('requests')"> <span class="sb-ico">🩸</span>طلبات الدم</button>
+      <button class="sb-btn"   id="sn-map"      onclick="goP('map')">      <span class="sb-ico">🗺️</span>الخريطة</button>
+      <button class="sb-btn"   id="sn-donate"   onclick="goP('donate')">   <span class="sb-ico">❤️</span>تبرع بالدم</button>
+      <button class="sb-btn"   id="sn-health"   onclick="goP('health')">   <span class="sb-ico">💊</span>صحتي</button>
+      <button class="sb-btn"   id="sn-chat"     onclick="goP('chat')">     <span class="sb-ico">💬</span>الرسائل</button>
+      <div class="sb-div"></div>
+      <button class="sb-btn admin-only" id="sn-admin" onclick="goP('admin')"><span class="sb-ico">⚙️</span>لوحة الإدارة</button>
+      <button class="sb-btn"   id="sn-profile"  onclick="goP('profile')">  <span class="sb-ico">👤</span>حسابي</button>
+      <button class="sb-btn"   id="sn-lang"     onclick="openLangM()">     <span class="sb-ico">🌐</span>اللغة</button>
+      <button class="sb-btn"   id="sn-about"    onclick="openAboutM()">    <span class="sb-ico">ℹ️</span>عن التطبيق</button>
+    </div>
+    <div class="sb-foot">
+      <button class="sb-btn" onclick="doLogout()" style="color:#FFCDD2"><span class="sb-ico">🚪</span>تسجيل الخروج</button>
+    </div>
+  </div>
 
   <!-- لوحة الإشعارات -->
   <div class="notif-panel" id="notifPanel">
@@ -495,7 +535,7 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       <div class="hero">
         <div class="hero-content">
           <h1 id="heroWelcome">مرحباً في Lifeline 🩸</h1>
-          <p>نظام التبرع بالدم في العراق – تبرعك ينقذ حياة إنسان</p>
+          <p>تطبيق التبرع بالدم في العراق – تبرعك ينقذ حياة إنسان</p>
           <div class="hero-btns">
             <button class="btn" style="background:#fff;color:var(--red)" onclick="openModal('mRequest')">🆘 اطلب دماً الآن</button>
             <button class="btn" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.5)" onclick="showPage('map',null)">🗺️ خريطة المتبرعين</button>
@@ -504,10 +544,10 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       </div>
 
       <div class="stats-grid">
-        <div class="scard" style="border-color:var(--red)"><div class="snum" style="color:var(--red)" id="st1">0</div><div class="slbl">👥 متبرع مسجّل</div></div>
-        <div class="scard" style="border-color:var(--blue)"><div class="snum" style="color:var(--blue)" id="st2">0</div><div class="slbl">🩸 طلب دم</div></div>
-        <div class="scard" style="border-color:var(--green)"><div class="snum" style="color:var(--green)" id="st3">0</div><div class="slbl">❤️ حياة أنقذت</div></div>
-        <div class="scard" style="border-color:var(--gold)"><div class="snum" style="color:var(--gold)" id="st4">0</div><div class="slbl">⭐ تقييم متوسط</div></div>
+        <div class="scard" style="border-color:var(--red)"><div style="font-size:32px;margin-bottom:6px">👥</div><div class="snum" style="color:var(--red)" id="st1">0</div><div class="slbl">متبرع مسجّل</div></div>
+        <div class="scard" style="border-color:var(--blue)"><div style="font-size:32px;margin-bottom:6px">🩸</div><div class="snum" style="color:var(--blue)" id="st2">0</div><div class="slbl">طلب دم</div></div>
+        <div class="scard" style="border-color:var(--green)"><div style="font-size:32px;margin-bottom:6px">❤️</div><div class="snum" style="color:var(--green)" id="st3">0</div><div class="slbl">حياة أنقذت</div></div>
+        <div class="scard" style="border-color:var(--gold)"><div style="font-size:32px;margin-bottom:6px">⭐</div><div class="snum" style="color:var(--gold)" id="st4">0</div><div class="slbl">تقييم متوسط</div></div>
       </div>
 
       <div class="sec">
@@ -954,11 +994,43 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
   </div>
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyAEDrqfd_nclOwCq2EJBwyeydLvseM-Y10",authDomain:"lifeline-1ec6c.firebaseapp.com",projectId:"lifeline-1ec6c",storageBucket:"lifeline-1ec6c.firebasestorage.app",messagingSenderId:"892085234006",appId:"1:892085234006:web:d52fb4960c1442d9b18ef7"};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+function fbSave(col,id,data){try{db.collection(col).doc(String(id)).set(JSON.parse(JSON.stringify(data)));}catch(e){}}
+function fbDel(col,id){try{db.collection(col).doc(String(id)).delete();}catch(e){}}
+function fbLoadUsers(){
+  db.collection('users').get().then(s=>{
+    s.forEach(d=>{
+      const data=d.data(),id=d.id;
+      const idx=users.findIndex(u=>u.id===id);
+      if(idx>-1){users[idx].approved=data.approved;}
+      else{users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});}
+    });
+    saveData();updateStats();updateLoginStats();
+  }).catch(e=>{});
+}
+function fbWatch(){
+  db.collection('users').onSnapshot(s=>{
+    s.docChanges().forEach(c=>{
+      const data=c.doc.data(),id=c.doc.id;
+      if(c.type==='modified'){const u=users.find(x=>x.id===id);if(u)u.approved=data.approved;saveData();}
+      if(c.type==='added'){if(!users.find(x=>x.id===id))users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});}
+    });
+    updateStats();
+  });
+}
+</script>
 <script>
 // ══════════════════════════════════════════════════════
 //  البيانات الثابتة
 // ══════════════════════════════════════════════════════
 const ADMIN = {email:'afnantaha248@gmail.com', pass:'2003afnf2026', name:'أفنان طه عفين', id:'admin'};
+const ASSISTANT = {email:'tebaalani101@gmail.com', pass:'1234567te', name:'طيبة سفيان أسعد', id:'assistant'};
 
 const IRAQ = {
   'بغداد':['الكرخ','الرصافة','الأعظمية','الكاظمية','الكرادة','المنصور','الشعب','الزعفرانية','المدائن','أبو غريب','الطارمية','الصدر','الشعلة','الحرية','الدورة','العامرية','البياع','غزالية','سيدية'],
@@ -1211,15 +1283,22 @@ function launchApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
 
-  // ناف
   document.getElementById('navAvatar').textContent=currentUser.name[0];
   document.getElementById('navName').textContent=currentUser.name;
   document.getElementById('heroWelcome').textContent=`مرحباً ${currentUser.name} 👋`;
+  document.getElementById('sbAv').textContent=currentUser.name[0];
+  document.getElementById('sbNm').textContent=currentUser.name;
 
   if(currentUser.isAdmin){
-    document.getElementById('adminCrown').style.display='inline';
-    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-flex');
+    const crown=document.getElementById('adminCrown');
+    if(crown){crown.style.display='inline';crown.textContent=currentUser.isAssistant?'🌟':'👑';}
+    document.getElementById('sbRl').textContent=currentUser.isAssistant?'🌟 مساعدة مديرة التطبيق':'👑 مديرة التطبيق';
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
+    fbWatch();
+  } else {
+    document.getElementById('sbRl').textContent='مستخدم مسجّل';
   }
+  fbLoadUsers();
 
   updateStats();
   renderLatest();
@@ -1249,13 +1328,9 @@ function launchApp(){
 // ══════════════════════════════════════════════════════
 function showPage(page,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
-  if(btn) btn.classList.add('active');
-  else {
-    const t=document.querySelector(`.tab[onclick*="'${page}'"]`);
-    if(t) t.classList.add('active');
-  }
+  document.querySelectorAll('.sb-btn').forEach(t=>t.classList.remove('on'));
+  const sn=document.getElementById('sn-'+page);if(sn)sn.classList.add('on');
   if(page==='map') setTimeout(()=>{mapObj&&mapObj.invalidateSize();renderMap('all');},150);
   if(page==='profile') renderProfile();
   if(page==='donate') renderDonateStatus();
@@ -1988,7 +2063,7 @@ function renderAllReqs(){
       <td>${r.hosp}</td><td>${r.gov}</td>
       <td><span style="color:${c};font-weight:700">${urgAr(r.urg)}</span></td>
       <td>${r.status==='Completed'?'<span style="color:var(--green);font-weight:700">✅ مكتمل</span>':'<span style="color:var(--orange);font-weight:700">⏳ انتظار</span>'}</td>
-      <td>${r.status==='Pending'?`<button class="btn btn-green btn-sm" onclick="completeReq('${r.id}')">✅ إتمام</button>`:''} <button class="btn btn-blue btn-sm" onclick="openEditReq('${r.id}')">✏️</button></td>
+      <td>${r.status==='Pending'?`<button class="btn btn-green btn-sm" onclick="completeReq('${r.id}')">✅ إتمام</button> `:''}<button class="btn btn-blue btn-sm" onclick="openEditReq('${r.id}')">✏️</button> <button class="btn btn-danger btn-sm" onclick="deleteReq('${r.id}')">🗑️</button></td>
     </tr>`;
   }).join('')+'</tbody>';
 }
@@ -2034,6 +2109,7 @@ function renderProfile(){
         <p style="color:var(--gray);margin-bottom:14px">لم تسجّل كمتبرع بعد</p>
         <button class="btn btn-red btn-block" onclick="regDonor()">❤️ سجّل كمتبرع الآن</button>`}
     </div>
+    <button class="btn btn-blue btn-block" onclick="openProfileEdit()" style="margin-top:8px">✏️ تعديل معلوماتي</button>
     <button class="btn btn-outline btn-block" onclick="doLogout()" style="margin-top:8px">🚪 تسجيل الخروج</button>
   `;
 }
@@ -2141,6 +2217,82 @@ function showAlert(msg,type='s'){
 // ══════════════════════════════════════════════════════
 //  مساعدات
 // ══════════════════════════════════════════════════════
+
+// ══ Sidebar ══
+function openSB(){document.getElementById('sidebar').classList.add('open');document.getElementById('sbOv').classList.add('show');document.body.style.overflow='hidden';}
+function closeSB(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOv').classList.remove('show');document.body.style.overflow='';}
+function goP(page){closeSB();showPage(page,null);}
+
+// ══ حذف الطلب ══
+function deleteReq(id){
+  if(!currentUser?.isAdmin){showAlert('❌ هذه الصلاحية للمديرة فقط','e');return;}
+  if(!confirm('هل تريدين حذف هذا الطلب؟')) return;
+  const i=requests.findIndex(x=>x.id===id);
+  if(i>-1){requests.splice(i,1);saveData();fbDel('requests',id);updateStats();renderReqList();renderAdminPage();showAlert('🗑️ تم الحذف','s');}
+}
+
+// ══ تعديل الملف الشخصي ══
+function openProfileEdit(){
+  if(!currentUser)return;
+  const u=currentUser;
+  const govOpts=Object.keys(IRAQ).map(g=>`<option ${u.gov===g?'selected':''}>${g}</option>`).join('');
+  const regOpts=(IRAQ[u.gov]||[]).map(r=>`<option ${u.region===r?'selected':''}>${r}</option>`).join('');
+  const bOpts=['A+','A-','B+','B-','AB+','AB-','O+','O-'].map(b=>`<option ${u.blood===b?'selected':''}>${b}</option>`).join('');
+  document.getElementById('profileContent').innerHTML=`
+    <div class="sec">
+      <h2 style="margin-bottom:18px">✏️ تعديل معلوماتي</h2>
+      <div class="frow"><div class="fg"><label>👤 الاسم</label><input id="pe_n" value="${u.name||''}"></div><div class="fg"><label>📞 الهاتف</label><input id="pe_p" value="${u.phone||''}"></div></div>
+      <div class="frow"><div class="fg"><label>🩸 فصيلة الدم</label><select id="pe_b">${bOpts}</select></div><div class="fg"><label>🏛️ المحافظة</label><select id="pe_g" onchange="fillRegions('pe_r',this.value)">${govOpts}</select></div></div>
+      <div class="fg"><label>📍 المنطقة</label><select id="pe_r">${regOpts}</select></div>
+      <div class="frow" style="margin-top:12px">
+        <button class="btn btn-red" onclick="saveProfileEdit()">💾 حفظ</button>
+        <button class="btn btn-outline" onclick="renderProfile()">إلغاء</button>
+      </div>
+    </div>`;
+}
+function saveProfileEdit(){
+  if(!currentUser)return;
+  const name=document.getElementById('pe_n').value.trim();
+  if(!name){showAlert('يرجى إدخال الاسم','e');return;}
+  const phone=document.getElementById('pe_p').value.trim();
+  const blood=document.getElementById('pe_b').value;
+  const gov=document.getElementById('pe_g').value;
+  const region=document.getElementById('pe_r').value;
+  Object.assign(currentUser,{name,phone,blood,gov,region});
+  const u=users.find(x=>x.id===currentUser.id);if(u)Object.assign(u,{name,phone,blood,gov,region});
+  document.getElementById('navName').textContent=name;
+  document.getElementById('navAvatar').textContent=name[0];
+  document.getElementById('sbAv').textContent=name[0];
+  document.getElementById('sbNm').textContent=name;
+  saveData();
+  if(!['admin','assistant'].includes(currentUser.id))fbSave('users',currentUser.id,{...currentUser});
+  renderProfile();showAlert('✅ تم الحفظ','s');
+}
+
+// ══ اللغات ══
+const LANGS={
+  ar:{dir:'rtl',label:'العربية 🇮🇶',home:'الرئيسية',search:'البحث',requests:'طلبات الدم',map:'الخريطة',donate:'تبرع بالدم',health:'صحتي',chat:'الرسائل',admin:'لوحة الإدارة',profile:'حسابي',lang:'اللغة',about:'عن التطبيق'},
+  en:{dir:'ltr',label:'English 🇬🇧',home:'Home',search:'Search',requests:'Blood Requests',map:'Map',donate:'Donate Blood',health:'My Health',chat:'Messages',admin:'Admin Panel',profile:'My Account',lang:'Language',about:'About'},
+  ku:{dir:'rtl',label:'کوردی 🏔️',home:'سەرەکی',search:'گەڕان',requests:'داواکاری خوێن',map:'نەخشە',donate:'بەخشینی خوێن',health:'تەندرووستیم',chat:'پەیام',admin:'پانێلی بەڕێوەبەری',profile:'هەژمارەکەم',lang:'زمان',about:'دەربارەی'}
+};
+let curLang=localStorage.getItem('ll_lang')||'ar';
+
+function applyLang(code){
+  const L=LANGS[code]||LANGS.ar;curLang=code;localStorage.setItem('ll_lang',code);
+  document.documentElement.dir=L.dir;document.documentElement.lang=code;
+  const mp={home:L.home,search:L.search,requests:L.requests,map:L.map,donate:L.donate,health:L.health,chat:L.chat,admin:L.admin,profile:L.profile,lang:L.lang,about:L.about};
+  const icos={home:'🏠',search:'🔍',requests:'🩸',map:'🗺️',donate:'❤️',health:'💊',chat:'💬',admin:'⚙️',profile:'👤',lang:'🌐',about:'ℹ️'};
+  Object.keys(mp).forEach(k=>{const el=document.getElementById('sn-'+k);if(el)el.innerHTML=`<span class="sb-ico">${icos[k]}</span>${mp[k]}`;});
+}
+function openLangM(){
+  const btns=['ar','en','ku'].map(c=>`<button onclick="setLang('${c}')" style="display:flex;align-items:center;gap:12px;padding:14px;width:100%;background:${c===curLang?'var(--red)':'#f5f5f5'};color:${c===curLang?'#fff':'#333'};border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:inherit">${LANGS[c].label}</button>`).join('');
+  document.getElementById('langModalBody').innerHTML=btns;
+  openModal('mLang');
+}
+function setLang(code){applyLang(code);closeModal('mLang');showAlert(LANGS[code].label,'s');}
+
+function openAboutM(){openModal('mAbout');}
+
 function fmtTime(d){if(!d) return '';return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`}
 function fmtDate(d){if(!d) return '';return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`}
 
@@ -2448,24 +2600,48 @@ function saveReqEdit(){
 }
 
 
+</script>
+
+<!-- Modal Language -->
+<div class="modal" id="mLang">
+  <div class="mbox" style="max-width:320px">
+    <div class="mhead"><h3>🌐 اختيار اللغة</h3><button class="mclose" onclick="closeModal('mLang')">×</button></div>
+    <div class="mbody" id="langModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal About -->
+<div class="modal" id="mAbout">
+  <div class="mbox" style="max-width:400px">
+    <div class="mhead" style="background:linear-gradient(135deg,#1A237E,#283593)"><h3>ℹ️ عن التطبيق</h3><button class="mclose" onclick="closeModal('mAbout')">×</button></div>
+    <div class="mbody" style="text-align:center">
+      <div style="font-size:60px;margin-bottom:10px">🩸</div>
+      <div style="font-size:22px;font-weight:900;color:#C62828;margin-bottom:4px">Lifeline</div>
+      <div style="font-size:13px;color:#666;margin-bottom:20px">تطبيق التبرع بالدم في العراق</div>
+      <div style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:12px;padding:16px;margin-bottom:14px;text-align:right">
+        <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:8px">🎓 جامعة الأنبار</div>
+        <div style="font-size:13px;color:#1976D2;line-height:2">كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات<br><b>2026</b></div>
+      </div>
+      <div style="background:#FFF5F5;border-radius:12px;padding:14px;text-align:right">
+        <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:10px">👩‍💻 إعداد الطالبات</div>
+        <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:10px;margin-bottom:8px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#C62828;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0">أ</div>
+          <div><div style="font-weight:800;font-size:13px">أفنان طه عفين</div><div style="font-size:11px;color:#666">👑 مديرة التطبيق</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:10px">
+          <div style="width:34px;height:34px;border-radius:50%;background:#2E7D32;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0">ط</div>
+          <div><div style="font-weight:800;font-size:13px">طيبة سفيان أسعد</div><div style="font-size:11px;color:#666">🌟 مساعدة مديرة التطبيق</div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:#999">© 2026 Lifeline – جميع الحقوق محفوظة</div>
+    </div>
+  </div>
+</div>
+
 <script>
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(e=>console.log(e));
-  });
-}
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt',(e)=>{
-  e.preventDefault();deferredPrompt=e;
-  const b=document.getElementById('installBtn');
-  if(b) b.style.display='flex';
-});
-function installApp(){
-  if(deferredPrompt){
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
-  }
-}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+let _pr;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_pr=e;});
+function installApp(){if(_pr){_pr.prompt();_pr.userChoice.then(()=>{_pr=null;});}}
 </script>
 </body>
 </html>
