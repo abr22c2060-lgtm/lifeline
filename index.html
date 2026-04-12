@@ -2,15 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Lifeline">
-<meta name="theme-color" content="#C62828">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>Lifeline – تطبيق التبرع بالدم</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lifeline – نظام التبرع بالدم</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -372,8 +365,8 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 .sb-rl{font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
 .sb-x{background:rgba(255,255,255,.15);border:none;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:16px;flex-shrink:0}
 .sb-body{flex:1;overflow-y:auto;padding:4px 0}
-.sb-btn{display:flex;align-items:center;gap:12px;padding:13px 18px;width:100%;background:none;border:none;border-right:3px solid transparent;color:rgba(255,255,255,.6);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;text-align:right;transition:.15s}
-.sb-btn:hover{background:rgba(255,255,255,.06);color:#fff;border-right-color:rgba(198,40,40,.5)}
+.sb-btn{display:flex;align-items:center;gap:12px;padding:13px 18px;width:100%;background:none;border:none;border-right:3px solid transparent;color:rgba(255,255,255,.65);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;text-align:right;transition:.15s}
+.sb-btn:hover{background:rgba(255,255,255,.07);color:#fff;border-right-color:rgba(198,40,40,.5)}
 .sb-btn.on{background:rgba(198,40,40,.15);color:#fff;border-right-color:#C62828}
 .sb-btn.admin-only{display:none}
 .sb-ico{font-size:19px;flex-shrink:0;width:22px;text-align:center}
@@ -504,21 +497,21 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       <button class="sb-x" onclick="closeSB()">×</button>
     </div>
     <div class="sb-body">
-      <button class="sb-btn on" id="sn-home"     onclick="goP('home')">    <span class="sb-ico">🏠</span>الرئيسية</button>
-      <button class="sb-btn"   id="sn-search"   onclick="goP('search')">   <span class="sb-ico">🔍</span>البحث عن متبرع</button>
-      <button class="sb-btn"   id="sn-requests" onclick="goP('requests')"> <span class="sb-ico">🩸</span>طلبات الدم</button>
-      <button class="sb-btn"   id="sn-map"      onclick="goP('map')">      <span class="sb-ico">🗺️</span>الخريطة</button>
-      <button class="sb-btn"   id="sn-donate"   onclick="goP('donate')">   <span class="sb-ico">❤️</span>تبرع بالدم</button>
-      <button class="sb-btn"   id="sn-health"   onclick="goP('health')">   <span class="sb-ico">💊</span>صحتي</button>
-      <button class="sb-btn"   id="sn-chat"     onclick="goP('chat')">     <span class="sb-ico">💬</span>الرسائل</button>
+      <button class="sb-btn on" id="sn-home"     onclick="goP('home')">    <span class="sb-ico">🏠</span><span class="sb-lbl">الرئيسية</span></button>
+      <button class="sb-btn"   id="sn-search"   onclick="goP('search')">   <span class="sb-ico">🔍</span><span class="sb-lbl">البحث</span></button>
+      <button class="sb-btn"   id="sn-requests" onclick="goP('requests')"> <span class="sb-ico">🩸</span><span class="sb-lbl">طلبات الدم</span></button>
+      <button class="sb-btn"   id="sn-map"      onclick="goP('map')">      <span class="sb-ico">🗺️</span><span class="sb-lbl">الخريطة</span></button>
+      <button class="sb-btn"   id="sn-donate"   onclick="goP('donate')">   <span class="sb-ico">❤️</span><span class="sb-lbl">تبرع بالدم</span></button>
+      <button class="sb-btn"   id="sn-health"   onclick="goP('health')">   <span class="sb-ico">💊</span><span class="sb-lbl">صحتي</span></button>
+      <button class="sb-btn"   id="sn-chat"     onclick="goP('chat')">     <span class="sb-ico">💬</span><span class="sb-lbl">الرسائل</span></button>
       <div class="sb-div"></div>
-      <button class="sb-btn admin-only" id="sn-admin" onclick="goP('admin')"><span class="sb-ico">⚙️</span>لوحة الإدارة</button>
-      <button class="sb-btn"   id="sn-profile"  onclick="goP('profile')">  <span class="sb-ico">👤</span>حسابي</button>
-      <button class="sb-btn"   id="sn-lang"     onclick="openLangM()">     <span class="sb-ico">🌐</span>اللغة</button>
-      <button class="sb-btn"   id="sn-about"    onclick="openAboutM()">    <span class="sb-ico">ℹ️</span>عن التطبيق</button>
+      <button class="sb-btn admin-only" id="sn-admin" onclick="goP('admin')"><span class="sb-ico">⚙️</span><span class="sb-lbl">لوحة الإدارة</span></button>
+      <button class="sb-btn"   id="sn-profile"  onclick="goP('profile')">  <span class="sb-ico">👤</span><span class="sb-lbl">حسابي</span></button>
+      <button class="sb-btn"   id="sn-lang"     onclick="openLangM()">     <span class="sb-ico">🌐</span><span class="sb-lbl">اللغة</span></button>
+      <button class="sb-btn"   id="sn-about"    onclick="openAboutM()">    <span class="sb-ico">ℹ️</span><span class="sb-lbl">عن التطبيق</span></button>
     </div>
     <div class="sb-foot">
-      <button class="sb-btn" onclick="doLogout()" style="color:#FFCDD2"><span class="sb-ico">🚪</span>تسجيل الخروج</button>
+      <button class="sb-btn" onclick="doLogout()" style="color:#FFCDD2"><span class="sb-ico">🚪</span><span class="sb-lbl">تسجيل الخروج</span></button>
     </div>
   </div>
 
@@ -544,10 +537,10 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       </div>
 
       <div class="stats-grid">
-        <div class="scard" style="border-color:var(--red)"><div style="font-size:32px;margin-bottom:6px">👥</div><div class="snum" style="color:var(--red)" id="st1">0</div><div class="slbl">متبرع مسجّل</div></div>
-        <div class="scard" style="border-color:var(--blue)"><div style="font-size:32px;margin-bottom:6px">🩸</div><div class="snum" style="color:var(--blue)" id="st2">0</div><div class="slbl">طلب دم</div></div>
-        <div class="scard" style="border-color:var(--green)"><div style="font-size:32px;margin-bottom:6px">❤️</div><div class="snum" style="color:var(--green)" id="st3">0</div><div class="slbl">حياة أنقذت</div></div>
-        <div class="scard" style="border-color:var(--gold)"><div style="font-size:32px;margin-bottom:6px">⭐</div><div class="snum" style="color:var(--gold)" id="st4">0</div><div class="slbl">تقييم متوسط</div></div>
+        <div class="scard" style="border-color:var(--red)"><div class="snum" style="color:var(--red)" id="st1">0</div><div class="slbl">👥 متبرع مسجّل</div></div>
+        <div class="scard" style="border-color:var(--blue)"><div class="snum" style="color:var(--blue)" id="st2">0</div><div class="slbl">🩸 طلب دم</div></div>
+        <div class="scard" style="border-color:var(--green)"><div class="snum" style="color:var(--green)" id="st3">0</div><div class="slbl">❤️ حياة أنقذت</div></div>
+        <div class="scard" style="border-color:var(--gold)"><div class="snum" style="color:var(--gold)" id="st4">0</div><div class="slbl">⭐ تقييم متوسط</div></div>
       </div>
 
       <div class="sec">
@@ -636,7 +629,10 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       </div>
 
       <div class="sec">
-        <h2 style="margin-bottom:16px">⭐ تقييم التبرعات</h2>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <h2>⭐ تقييم التبرعات</h2>
+          <button class="btn btn-gold btn-sm" onclick="openModal('mRate')">+ أضف تقييم</button>
+        </div>
         <div id="ratingSection"></div>
       </div>
     </div>
@@ -994,37 +990,6 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
   </div>
 </div>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig={apiKey:"AIzaSyAEDrqfd_nclOwCq2EJBwyeydLvseM-Y10",authDomain:"lifeline-1ec6c.firebaseapp.com",projectId:"lifeline-1ec6c",storageBucket:"lifeline-1ec6c.firebasestorage.app",messagingSenderId:"892085234006",appId:"1:892085234006:web:d52fb4960c1442d9b18ef7"};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
-function fbSave(col,id,data){try{db.collection(col).doc(String(id)).set(JSON.parse(JSON.stringify(data)));}catch(e){}}
-function fbDel(col,id){try{db.collection(col).doc(String(id)).delete();}catch(e){}}
-function fbLoadUsers(){
-  db.collection('users').get().then(s=>{
-    s.forEach(d=>{
-      const data=d.data(),id=d.id;
-      const idx=users.findIndex(u=>u.id===id);
-      if(idx>-1){users[idx].approved=data.approved;}
-      else{users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});}
-    });
-    saveData();updateStats();updateLoginStats();
-  }).catch(e=>{});
-}
-function fbWatch(){
-  db.collection('users').onSnapshot(s=>{
-    s.docChanges().forEach(c=>{
-      const data=c.doc.data(),id=c.doc.id;
-      if(c.type==='modified'){const u=users.find(x=>x.id===id);if(u)u.approved=data.approved;saveData();}
-      if(c.type==='added'){if(!users.find(x=>x.id===id))users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});}
-    });
-    updateStats();
-  });
-}
-</script>
 <script>
 // ══════════════════════════════════════════════════════
 //  البيانات الثابتة
@@ -1125,6 +1090,9 @@ function loadData(){
     return !!(u); // إرجاع true إذا كانت بيانات محفوظة
   }catch(e){return false;}
 }
+
+// ══ Firebase ══
+const firebaseConfig={apiKey:"AIzaSyAEDrqfd_nclOwCq2EJBwyeydLvseM-Y10",authDomain:"lifeline-1ec6c.firebaseapp.com",projectId:"lifeline-1ec6c",storageBucket:"lifeline-1ec6c.firebasestorage.app",messagingSenderId:"892085234006",appId:"1:892085234006:web:d52fb4960c1442d9b18ef7"};
 
 // ══════════════════════════════════════════════════════
 //  التهيئة
@@ -1286,19 +1254,23 @@ function launchApp(){
   document.getElementById('navAvatar').textContent=currentUser.name[0];
   document.getElementById('navName').textContent=currentUser.name;
   document.getElementById('heroWelcome').textContent=`مرحباً ${currentUser.name} 👋`;
-  document.getElementById('sbAv').textContent=currentUser.name[0];
-  document.getElementById('sbNm').textContent=currentUser.name;
 
   if(currentUser.isAdmin){
     const crown=document.getElementById('adminCrown');
     if(crown){crown.style.display='inline';crown.textContent=currentUser.isAssistant?'🌟':'👑';}
-    document.getElementById('sbRl').textContent=currentUser.isAssistant?'🌟 مساعدة مديرة التطبيق':'👑 مديرة التطبيق';
-    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
-    fbWatch();
-  } else {
-    document.getElementById('sbRl').textContent='مستخدم مسجّل';
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-flex');
+    // مراقبة Firebase
+    if(window._db){
+      window._db.collection('users').onSnapshot(s=>{
+        s.docChanges().forEach(c=>{
+          const data=c.doc.data(),id=c.doc.id;
+          if(c.type==='modified'){const u=users.find(x=>x.id===id);if(u)u.approved=data.approved;saveData();}
+          if(c.type==='added'&&!users.find(x=>x.id===id))users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});
+        });
+        updateStats();
+      });
+    }
   }
-  fbLoadUsers();
 
   updateStats();
   renderLatest();
@@ -1307,6 +1279,10 @@ function launchApp(){
   renderRatings();
   initMainMap();
   renderCenters();
+  applyLang(curLang);
+  const sbAvEl=document.getElementById('sbAv');if(sbAvEl)sbAvEl.textContent=currentUser.name[0];
+  const sbNmEl=document.getElementById('sbNm');if(sbNmEl)sbNmEl.textContent=currentUser.name;
+  const sbRlEl=document.getElementById('sbRl');if(sbRlEl)sbRlEl.textContent=currentUser.isAdmin?(currentUser.isAssistant?'🌟 مساعدة مديرة التطبيق':'👑 مديرة التطبيق'):'مستخدم مسجّل';
 
   // إشعار ترحيب
   if(!currentUser.isAdmin){
@@ -2042,8 +2018,11 @@ function renderAllUsers(){
     <td>${u.gov}</td>
     <td>${u.approved?'<span style="color:var(--green);font-weight:700">✅ مفعّل</span>':'<span style="color:var(--orange);font-weight:700">⏳ انتظار</span>'}</td>
     <td>
-      ${u.approved?`<button class="btn btn-danger btn-sm" onclick="rejectUser('${u.id}')">🗑️</button>`:
-        `<button class="btn btn-green btn-sm" onclick="approveUser('${u.id}')">✅</button>`}
+      ${u.approved
+        ? `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')" title="حذف المستخدم">🗑️ حذف</button>`
+        : `<button class="btn btn-green btn-sm" onclick="approveUser('${u.id}')">✅ قبول</button>
+           <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">❌ رفض</button>`
+      }
       <button class="btn btn-blue btn-sm" onclick="openEditUser('${u.id}')" style="margin-right:4px">✏️</button>
     </td>
   </tr>`).join('')+'</tbody>';
@@ -2063,7 +2042,7 @@ function renderAllReqs(){
       <td>${r.hosp}</td><td>${r.gov}</td>
       <td><span style="color:${c};font-weight:700">${urgAr(r.urg)}</span></td>
       <td>${r.status==='Completed'?'<span style="color:var(--green);font-weight:700">✅ مكتمل</span>':'<span style="color:var(--orange);font-weight:700">⏳ انتظار</span>'}</td>
-      <td>${r.status==='Pending'?`<button class="btn btn-green btn-sm" onclick="completeReq('${r.id}')">✅ إتمام</button> `:''}<button class="btn btn-blue btn-sm" onclick="openEditReq('${r.id}')">✏️</button> <button class="btn btn-danger btn-sm" onclick="deleteReq('${r.id}')">🗑️</button></td>
+      <td>${r.status==='Pending'?`<button class="btn btn-green btn-sm" onclick="completeReq('${r.id}')">✅ إتمام</button>`:''} <button class="btn btn-blue btn-sm" onclick="openEditReq('${r.id}')">✏️</button></td>
     </tr>`;
   }).join('')+'</tbody>';
 }
@@ -2109,7 +2088,6 @@ function renderProfile(){
         <p style="color:var(--gray);margin-bottom:14px">لم تسجّل كمتبرع بعد</p>
         <button class="btn btn-red btn-block" onclick="regDonor()">❤️ سجّل كمتبرع الآن</button>`}
     </div>
-    <button class="btn btn-blue btn-block" onclick="openProfileEdit()" style="margin-top:8px">✏️ تعديل معلوماتي</button>
     <button class="btn btn-outline btn-block" onclick="doLogout()" style="margin-top:8px">🚪 تسجيل الخروج</button>
   `;
 }
@@ -2223,12 +2201,32 @@ function openSB(){document.getElementById('sidebar').classList.add('open');docum
 function closeSB(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOv').classList.remove('show');document.body.style.overflow='';}
 function goP(page){closeSB();showPage(page,null);}
 
+// ══ حذف المستخدم ══
+function deleteUser(id){
+  if(!currentUser?.isAdmin){showAlert('❌ هذه الصلاحية للمديرة فقط','e');return;}
+  const u=users.find(x=>x.id===id);
+  if(!u)return;
+  if(!confirm('هل تريدين حذف المستخدم ' + u.name + ' نهائياً؟'))return;
+  const i=users.findIndex(x=>x.id===id);
+  users.splice(i,1);
+  saveData();
+  fbDel('users',id);
+  renderAdminPage();updateStats();
+  showAlert('🗑️ تم حذف المستخدم بنجاح','s');
+}
+
 // ══ حذف الطلب ══
 function deleteReq(id){
   if(!currentUser?.isAdmin){showAlert('❌ هذه الصلاحية للمديرة فقط','e');return;}
-  if(!confirm('هل تريدين حذف هذا الطلب؟')) return;
+  if(!confirm('هل تريدين حذف هذا الطلب نهائياً؟'))return;
   const i=requests.findIndex(x=>x.id===id);
-  if(i>-1){requests.splice(i,1);saveData();fbDel('requests',id);updateStats();renderReqList();renderAdminPage();showAlert('🗑️ تم الحذف','s');}
+  if(i>-1){
+    requests.splice(i,1);
+    saveData();
+    fbDel('requests',id);
+    updateStats();renderReqList();renderAdminPage();
+    showAlert('🗑️ تم حذف الطلب بنجاح','s');
+  }
 }
 
 // ══ تعديل الملف الشخصي ══
@@ -2262,36 +2260,191 @@ function saveProfileEdit(){
   const u=users.find(x=>x.id===currentUser.id);if(u)Object.assign(u,{name,phone,blood,gov,region});
   document.getElementById('navName').textContent=name;
   document.getElementById('navAvatar').textContent=name[0];
-  document.getElementById('sbAv').textContent=name[0];
-  document.getElementById('sbNm').textContent=name;
+  const sbAv=document.getElementById('sbAv');if(sbAv)sbAv.textContent=name[0];
+  const sbNm=document.getElementById('sbNm');if(sbNm)sbNm.textContent=name;
   saveData();
   if(!['admin','assistant'].includes(currentUser.id))fbSave('users',currentUser.id,{...currentUser});
   renderProfile();showAlert('✅ تم الحفظ','s');
 }
 
-// ══ اللغات ══
+// ══ عن التطبيق ══
+function openAboutM(){openModal('mAbout');}
+
+// ══════════════════════════════════════════════════════
+// نظام اللغات الكامل
+// ══════════════════════════════════════════════════════
 const LANGS={
-  ar:{dir:'rtl',label:'العربية 🇮🇶',home:'الرئيسية',search:'البحث',requests:'طلبات الدم',map:'الخريطة',donate:'تبرع بالدم',health:'صحتي',chat:'الرسائل',admin:'لوحة الإدارة',profile:'حسابي',lang:'اللغة',about:'عن التطبيق'},
-  en:{dir:'ltr',label:'English 🇬🇧',home:'Home',search:'Search',requests:'Blood Requests',map:'Map',donate:'Donate Blood',health:'My Health',chat:'Messages',admin:'Admin Panel',profile:'My Account',lang:'Language',about:'About'},
-  ku:{dir:'rtl',label:'کوردی 🏔️',home:'سەرەکی',search:'گەڕان',requests:'داواکاری خوێن',map:'نەخشە',donate:'بەخشینی خوێن',health:'تەندرووستیم',chat:'پەیام',admin:'پانێلی بەڕێوەبەری',profile:'هەژمارەکەم',lang:'زمان',about:'دەربارەی'}
+  ar:{
+    dir:'rtl',code:'ar',label:'العربية 🇮🇶',
+    // شريط التنقل
+    home:'الرئيسية',search:'البحث',requests:'طلبات الدم',map:'الخريطة',
+    donate:'تبرع بالدم',health:'صحتي',chat:'الرسائل',
+    admin:'لوحة الإدارة',profile:'حسابي',lang:'اللغة',about:'عن التطبيق',logout:'تسجيل الخروج',
+    // الصفحة الرئيسية
+    heroTitle:'مرحباً في Lifeline 🩸',heroSub:'تطبيق التبرع بالدم في العراق – تبرعك ينقذ حياة إنسان',
+    requestBlood:'🆘 اطلب دماً الآن',mapDonors:'🗺️ خريطة المتبرعين',
+    statDonors:'متبرع مسجّل',statRequests:'طلب دم',statSaved:'حياة أنقذت',statRating:'تقييم متوسط',
+    bloodTypes:'💉 فصائل الدم وتوافقها',latestReqs:'🆕 آخر الطلبات',viewAll:'عرض الكل',
+    // بحث
+    searchDonor:'🔍 البحث عن متبرعين',bloodType:'فصيلة الدم',gov:'المحافظة',region:'المنطقة',
+    all:'الكل',searchBtn:'🔍 بحث عن متبرع',
+    // طلبات
+    bloodRequests:'🩸 طلبات الدم',newRequest:'+ طلب جديد',
+    // صحتي
+    myHealth:'💊 تتبع الحالة الصحية',addReading:'+ تسجيل قراءة',
+    donationRating:'⭐ تقييم التبرعات',addRating:'+ أضف تقييم',
+    // رسائل
+    publicForum:'🌐 المنتدى العام',myMessages:'💬 محادثاتي',contactAdmin:'👑 راسلي المديرة',
+    typeMsg:'اكتب رسالتك...',noMsgs:'لا توجد رسائل – كن أول من يبدأ!',
+    // حسابي
+    myAccount:'📋 المعلومات الشخصية',editInfo:'✏️ تعديل معلوماتي',donationStatus:'❤️ حالة التبرع',
+    available:'✅ متاح للتبرع',notAvailable:'⏳ غير متاح',registerDonor:'❤️ سجّل كمتبرع الآن',
+    // دخول
+    welcome:'أهلاً بك 👋',loginTab:'تسجيل الدخول',registerTab:'حساب جديد',
+    emailLbl:'📧 البريد الإلكتروني',passLbl:'🔒 كلمة المرور',enterBtn:'دخول ←',
+    noAccount:'ليس لديك حساب؟',signupNow:'سجّل الآن',
+    nameLbl:'👤 الاسم',phoneLbl:'📞 الهاتف',
+    createBtn:'إنشاء الحساب ←',haveAccount:'لديك حساب؟',loginNow:'سجّل دخولك',
+  },
+  en:{
+    dir:'ltr',code:'en',label:'English 🇬🇧',
+    home:'Home',search:'Search',requests:'Blood Requests',map:'Map',
+    donate:'Donate Blood',health:'My Health',chat:'Messages',
+    admin:'Admin Panel',profile:'My Account',lang:'Language',about:'About',logout:'Logout',
+    heroTitle:'Welcome to Lifeline 🩸',heroSub:'Blood Donation App in Iraq – Your donation saves lives',
+    requestBlood:'🆘 Request Blood Now',mapDonors:'🗺️ Donors Map',
+    statDonors:'Registered Donor',statRequests:'Blood Request',statSaved:'Lives Saved',statRating:'Avg Rating',
+    bloodTypes:'💉 Blood Types & Compatibility',latestReqs:'🆕 Latest Requests',viewAll:'View All',
+    searchDonor:'🔍 Search for Donors',bloodType:'Blood Type',gov:'Governorate',region:'Region',
+    all:'All',searchBtn:'🔍 Search for Donor',
+    bloodRequests:'🩸 Blood Requests',newRequest:'+ New Request',
+    myHealth:'💊 Health Tracking',addReading:'+ Add Reading',
+    donationRating:'⭐ Donation Ratings',addRating:'+ Add Rating',
+    publicForum:'🌐 Public Forum',myMessages:'💬 My Chats',contactAdmin:'👑 Contact Admin',
+    typeMsg:'Type your message...',noMsgs:'No messages – Be the first!',
+    myAccount:'📋 Personal Information',editInfo:'✏️ Edit My Info',donationStatus:'❤️ Donation Status',
+    available:'✅ Available to Donate',notAvailable:'⏳ Not Available',registerDonor:'❤️ Register as Donor',
+    welcome:'Welcome 👋',loginTab:'Login',registerTab:'New Account',
+    emailLbl:'📧 Email',passLbl:'🔒 Password',enterBtn:'Login ←',
+    noAccount:"Don't have an account?",signupNow:'Sign Up',
+    nameLbl:'👤 Name',phoneLbl:'📞 Phone',
+    createBtn:'Create Account ←',haveAccount:'Have an account?',loginNow:'Login',
+  },
+  ku:{
+    dir:'rtl',code:'ku',label:'کوردی 🏔️',
+    home:'سەرەکی',search:'گەڕان',requests:'داواکاری خوێن',map:'نەخشە',
+    donate:'بەخشینی خوێن',health:'تەندرووستیم',chat:'پەیام',
+    admin:'پانێلی بەڕێوەبەری',profile:'هەژمارەکەم',lang:'زمان',about:'دەربارەی',logout:'دەرچوون',
+    heroTitle:'بەخێربێیت بۆ Lifeline 🩸',heroSub:'ئەپی بەخشینی خوێن لە عێراق – بەخشینت ژیان ڕێزدەکات',
+    requestBlood:'🆘 داوای خوێن بکە',mapDonors:'🗺️ نەخشەی بەخشەران',
+    statDonors:'بەخشەری تۆمارکراو',statRequests:'داواکاری خوێن',statSaved:'ژیانی ڕەزاندراو',statRating:'نرخاندنی مامناوەند',
+    bloodTypes:'💉 جۆرەکانی خوێن و گونجانی',latestReqs:'🆕 دوایین داواکاریەکان',viewAll:'پیشاندانی هەمووی',
+    searchDonor:'🔍 گەڕان بۆ بەخشەران',bloodType:'جۆری خوێن',gov:'پارێزگا',region:'ناوچە',
+    all:'هەمووی',searchBtn:'🔍 گەڕان بۆ بەخشەر',
+    bloodRequests:'🩸 داواکارییەکانی خوێن',newRequest:'+ داواکاری نوێ',
+    myHealth:'💊 شوێنکەوتنی تەندرووستی',addReading:'+ تۆمارکردنی خوێندنەوە',
+    donationRating:'⭐ نرخاندنی بەخشینەکان',addRating:'+ نرخاندن زیادبکە',
+    publicForum:'🌐 فۆرامی گشتی',myMessages:'💬 چاتەکانم',contactAdmin:'👑 پەیوەندی بە بەڕێوەبەر',
+    typeMsg:'پەیامەکەت بنووسە...',noMsgs:'پەیامێک نییە – یەکەمی بە!',
+    myAccount:'📋 زانیاری کەسی',editInfo:'✏️ دەستکاریکردنی زانیارییەکانم',donationStatus:'❤️ دۆخی بەخشین',
+    available:'✅ ئامادەی بەخشین',notAvailable:'⏳ ئامادە نییە',registerDonor:'❤️ وەک بەخشەر تۆمارببە',
+    welcome:'بەخێربێیت 👋',loginTab:'چوونەژوورەوە',registerTab:'هەژمارێکی نوێ',
+    emailLbl:'📧 ئیمەیل',passLbl:'🔒 وشەی نهێنی',enterBtn:'چوونەژوورەوە ←',
+    noAccount:'هەژمارت نییە؟',signupNow:'تۆمارببە',
+    nameLbl:'👤 ناو',phoneLbl:'📞 تەلەفۆن',
+    createBtn:'دروستکردنی هەژمار ←',haveAccount:'هەژمارت هەیە؟',loginNow:'بچۆ ژوورەوە',
+  }
 };
 let curLang=localStorage.getItem('ll_lang')||'ar';
 
 function applyLang(code){
-  const L=LANGS[code]||LANGS.ar;curLang=code;localStorage.setItem('ll_lang',code);
-  document.documentElement.dir=L.dir;document.documentElement.lang=code;
-  const mp={home:L.home,search:L.search,requests:L.requests,map:L.map,donate:L.donate,health:L.health,chat:L.chat,admin:L.admin,profile:L.profile,lang:L.lang,about:L.about};
-  const icos={home:'🏠',search:'🔍',requests:'🩸',map:'🗺️',donate:'❤️',health:'💊',chat:'💬',admin:'⚙️',profile:'👤',lang:'🌐',about:'ℹ️'};
-  Object.keys(mp).forEach(k=>{const el=document.getElementById('sn-'+k);if(el)el.innerHTML=`<span class="sb-ico">${icos[k]}</span>${mp[k]}`;});
+  const L=LANGS[code]||LANGS.ar;
+  curLang=code;
+  localStorage.setItem('ll_lang',code);
+  document.documentElement.dir=L.dir;
+  document.documentElement.lang=code;
+
+  // شريط جانبي
+  const sbMap={
+    'sn-home':L.home,'sn-search':L.search,'sn-requests':L.requests,
+    'sn-map':L.map,'sn-donate':L.donate,'sn-health':L.health,
+    'sn-chat':L.chat,'sn-admin':L.admin,'sn-profile':L.profile,
+    'sn-lang':L.lang,'sn-about':L.about
+  };
+  const sbIco={'sn-home':'🏠','sn-search':'🔍','sn-requests':'🩸','sn-map':'🗺️',
+    'sn-donate':'❤️','sn-health':'💊','sn-chat':'💬','sn-admin':'⚙️',
+    'sn-profile':'👤','sn-lang':'🌐','sn-about':'ℹ️'};
+  Object.keys(sbMap).forEach(k=>{
+    const el=document.getElementById(k);
+    if(el)el.innerHTML=`<span class="sb-ico">${sbIco[k]}</span><span class="sb-lbl">${sbMap[k]}</span>`;
+  });
+  const sbFoot=document.querySelector('.sb-foot .sb-btn');
+  if(sbFoot)sbFoot.innerHTML=`<span class="sb-ico">🚪</span><span class="sb-lbl">${L.logout}</span>`;
+
+  // الصفحة الرئيسية
+  const hw=document.getElementById('heroWelcome');
+  if(hw&&currentUser)hw.textContent=`${L.welcome.replace('👋','')} ${currentUser.name} 👋`;
+  const heroP=document.querySelector('.hero p');if(heroP)heroP.textContent=L.heroSub;
+  const heroBtn1=document.querySelector('.hero-btns .btn:first-child');if(heroBtn1)heroBtn1.textContent=L.requestBlood;
+  const heroBtn2=document.querySelector('.hero-btns .btn:last-child');if(heroBtn2)heroBtn2.textContent=L.mapDonors;
+
+  // إحصائيات
+  const s=['st1','st2','st3','st4'];
+  const sl=[L.statDonors,L.statRequests,L.statSaved,L.statRating];
+  s.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.nextElementSibling)el.nextElementSibling.textContent=sl[i];});
+  const lbls=document.querySelectorAll('.slbl');
+  if(lbls[0])lbls[0].textContent=L.statDonors;
+  if(lbls[1])lbls[1].textContent=L.statRequests;
+  if(lbls[2])lbls[2].textContent=L.statSaved;
+  if(lbls[3])lbls[3].textContent=L.statRating;
+
+  // عناوين الأقسام
+  const viewAllBtn=document.querySelector('#page-home .btn-outline');if(viewAllBtn)viewAllBtn.textContent=L.viewAll;
+
+  // صفحة البحث
+  const searchTitle=document.querySelector('#page-search h2');if(searchTitle)searchTitle.textContent=L.searchDonor;
+  const searchBtn=document.querySelector('#page-search .btn-red');if(searchBtn)searchBtn.textContent=L.searchBtn;
+
+  // صفحة الطلبات
+  const reqTitle=document.querySelector('#page-requests .sec-title');if(reqTitle)reqTitle.textContent=L.bloodRequests;
+  const reqBtn=document.querySelector('#page-requests .btn-red');if(reqBtn)reqBtn.textContent=L.newRequest;
+
+  // صفحة الرسائل
+  const chatTabs=document.querySelectorAll('.ctab');
+  if(chatTabs[0])chatTabs[0].textContent=L.publicForum;
+  if(chatTabs[1])chatTabs[1].textContent=L.myMessages;
+  if(chatTabs[2])chatTabs[2].textContent=L.contactAdmin;
+  const pubIn=document.getElementById('pubIn');if(pubIn)pubIn.placeholder=L.typeMsg;
+  const pvtIn=document.getElementById('pvtIn');if(pvtIn)pvtIn.placeholder=L.typeMsg;
+
+  // شاشة الدخول
+  const cardTitle=document.querySelector('.card-title');if(cardTitle)cardTitle.textContent=L.welcome;
+  const ltabs=document.querySelectorAll('.ltab');
+  if(ltabs[0])ltabs[0].textContent=L.loginTab;
+  if(ltabs[1])ltabs[1].textContent=L.registerTab;
+  const enterBtns=document.querySelectorAll('.btn-enter');
+  if(enterBtns[0])enterBtns[0].textContent=L.enterBtn;
+  if(enterBtns[1])enterBtns[1].textContent=L.createBtn;
+  ['lEmail','rEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.previousElementSibling&&(el.previousElementSibling.textContent=L.emailLbl);});
 }
+
 function openLangM(){
-  const btns=['ar','en','ku'].map(c=>`<button onclick="setLang('${c}')" style="display:flex;align-items:center;gap:12px;padding:14px;width:100%;background:${c===curLang?'var(--red)':'#f5f5f5'};color:${c===curLang?'#fff':'#333'};border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:8px;font-family:inherit">${LANGS[c].label}</button>`).join('');
+  const btns=['ar','en','ku'].map(c=>`
+    <button onclick="setLang('${c}')" style="display:flex;align-items:center;gap:14px;padding:16px;width:100%;
+      background:${c===curLang?'var(--red)':'#f8f8f8'};color:${c===curLang?'#fff':'#333'};
+      border:2px solid ${c===curLang?'var(--red)':'#eee'};border-radius:12px;
+      font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;font-family:inherit;transition:.2s">
+      ${LANGS[c].label}
+      ${c===curLang?'<span style="margin-right:auto">✅</span>':''}
+    </button>`).join('');
   document.getElementById('langModalBody').innerHTML=btns;
   openModal('mLang');
 }
-function setLang(code){applyLang(code);closeModal('mLang');showAlert(LANGS[code].label,'s');}
-
-function openAboutM(){openModal('mAbout');}
+function setLang(code){
+  applyLang(code);
+  closeModal('mLang');
+  showAlert(LANGS[code].label,'s');
+}
 
 function fmtTime(d){if(!d) return '';return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`}
 function fmtDate(d){if(!d) return '';return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`}
@@ -2604,7 +2757,7 @@ function saveReqEdit(){
 
 <!-- Modal Language -->
 <div class="modal" id="mLang">
-  <div class="mbox" style="max-width:320px">
+  <div class="mbox" style="max-width:340px">
     <div class="mhead"><h3>🌐 اختيار اللغة</h3><button class="mclose" onclick="closeModal('mLang')">×</button></div>
     <div class="mbody" id="langModalBody"></div>
   </div>
@@ -2620,7 +2773,7 @@ function saveReqEdit(){
       <div style="font-size:13px;color:#666;margin-bottom:20px">تطبيق التبرع بالدم في العراق</div>
       <div style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:12px;padding:16px;margin-bottom:14px;text-align:right">
         <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:8px">🎓 جامعة الأنبار</div>
-        <div style="font-size:13px;color:#1976D2;line-height:2">كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات<br><b>2026</b></div>
+        <div style="font-size:13px;color:#1976D2;line-height:2">كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات – 2026</div>
       </div>
       <div style="background:#FFF5F5;border-radius:12px;padding:14px;text-align:right">
         <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:10px">👩‍💻 إعداد الطالبات</div>
@@ -2633,15 +2786,15 @@ function saveReqEdit(){
           <div><div style="font-weight:800;font-size:13px">طيبة سفيان أسعد</div><div style="font-size:11px;color:#666">🌟 مساعدة مديرة التطبيق</div></div>
         </div>
       </div>
-      <div style="margin-top:14px;font-size:11px;color:#999">© 2026 Lifeline – جميع الحقوق محفوظة</div>
     </div>
   </div>
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-let _pr;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_pr=e;});
-function installApp(){if(_pr){_pr.prompt();_pr.userChoice.then(()=>{_pr=null;});}}
 </script>
 </body>
 </html>
