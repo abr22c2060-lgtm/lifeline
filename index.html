@@ -1169,6 +1169,104 @@ function loadData(){
 // ══ Firebase ══
 const firebaseConfig={apiKey:"AIzaSyAEDrqfd_nclOwCq2EJBwyeydLvseM-Y10",authDomain:"lifeline-1ec6c.firebaseapp.com",projectId:"lifeline-1ec6c",storageBucket:"lifeline-1ec6c.firebasestorage.app",messagingSenderId:"892085234006",appId:"1:892085234006:web:d52fb4960c1442d9b18ef7"};
 
+// ══ Firebase ══
+let _db = null;
+let _unsubPub = null;
+let _unsubPvt = {};
+let _unsubNotif = null;
+
+function initFirebase(){
+  try {
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    _db = firebase.firestore();
+    console.log('✅ Firebase جاهز');
+  } catch(e){ console.log('Firebase error:', e); }
+}
+
+// حفظ في Firebase
+function fbSave(col, id, data){
+  if(!_db) return;
+  try { _db.collection(col).doc(String(id)).set(JSON.parse(JSON.stringify(data))).catch(()=>{}); } catch(e){}
+}
+function fbDel(col, id){
+  if(!_db) return;
+  try { _db.collection(col).doc(String(id)).delete().catch(()=>{}); } catch(e){}
+}
+
+// ══ مراقبة الرسائل العامة في الوقت الحقيقي ══
+function startPubChatListener(){
+  if(!_db) return;
+  if(_unsubPub) _unsubPub();
+  _unsubPub = _db.collection('pubMsgs')
+    .orderBy('timeMs', 'asc')
+    .limitToLast(100)
+    .onSnapshot(snap => {
+      pubMsgs = [];
+      snap.forEach(d => {
+        const data = d.data();
+        pubMsgs.push({id:d.id, sid:data.sid, sname:data.sname, txt:data.txt, time:new Date(data.timeMs||Date.now())});
+      });
+      saveData();
+      if(document.getElementById('page-chat')?.classList.contains('active')){
+        renderPubChat();
+      }
+    }, ()=>{});
+}
+
+// ══ مراقبة الرسائل الخاصة في الوقت الحقيقي ══
+function startPvtListener(roomId){
+  if(!_db || !roomId) return;
+  if(_unsubPvt[roomId]) return; // مراقب بالفعل
+  _unsubPvt[roomId] = _db.collection('pvtRooms').doc(roomId).collection('msgs')
+    .orderBy('timeMs', 'asc')
+    .limitToLast(100)
+    .onSnapshot(snap => {
+      pvtMsgs[roomId] = [];
+      snap.forEach(d => {
+        const data = d.data();
+        pvtMsgs[roomId].push({id:d.id, sid:data.sid, txt:data.txt, time:new Date(data.timeMs||Date.now())});
+      });
+      saveData();
+      if(currentRoom === roomId){
+        renderPvtChat();
+        // إشعار إذا الرسالة من شخص آخر
+        const last = pvtMsgs[roomId]?.slice(-1)[0];
+        if(last && last.sid !== currentUser?.id){
+          addNotification(`رسالة جديدة: ${last.txt.substring(0,40)}`, '💬');
+        }
+      }
+    }, ()=>{});
+}
+
+// ══ مراقبة الإشعارات من Firebase ══
+function startNotifListener(){
+  if(!_db || !currentUser) return;
+  if(_unsubNotif) _unsubNotif();
+  _unsubNotif = _db.collection('notifications')
+    .where('toId', '==', currentUser.id)
+    .where('read', '==', false)
+    .orderBy('timeMs', 'desc')
+    .limitToLast(20)
+    .onSnapshot(snap => {
+      snap.docChanges().forEach(change => {
+        if(change.type === 'added'){
+          const data = change.doc.data();
+          addNotification(data.msg, data.ico || '🔔');
+          // علّم كمقروء
+          _db.collection('notifications').doc(change.doc.id).update({read:true}).catch(()=>{});
+        }
+      });
+    }, ()=>{});
+}
+
+// ══ إرسال إشعار لمستخدم عبر Firebase ══
+function fbNotify(toId, msg, ico='🔔'){
+  if(!_db || !toId) return;
+  _db.collection('notifications').add({
+    toId, msg, ico, read: false, timeMs: Date.now()
+  }).catch(()=>{});
+}
+
 // ══════════════════════════════════════════════════════
 //  التهيئة
 // ══════════════════════════════════════════════════════
@@ -1178,6 +1276,13 @@ window.onload=()=>{
   const hasData=loadData();
   if(!hasData) addDemoData();
   updateLoginStats();
+  applyLang(localStorage.getItem('ll_lang')||'ar');
+  initFirebase();
+  // تحقق من جلسة محفوظة
+  if(checkAutoLogin()){
+    document.getElementById('loginScreen').style.display='none';
+    launchApp();
+  }
 };
 
 function fillAllGovSelects(){
@@ -1316,6 +1421,10 @@ function doRegister(){
 
   // إشعار للمدير
   addNotification(`👤 مستخدم جديد ينتظر الموافقة: ${name}`, '⏳');
+  fbNotify('admin', `مستخدم جديد ينتظر الموافقة: ${name}`, '👤');
+  fbNotify('assistant', `مستخدم جديد ينتظر الموافقة: ${name}`, '👤');
+  // حفظ المستخدم في Firebase
+  fbSave('users', newUser.id, {...newUser, joined:newUser.joined.toISOString()});
 
   errEl.style.display='none';
   showBadge('⏳','تم إرسال طلب التسجيل!','حسابك قيد المراجعة من المديرة',2500);
@@ -1362,6 +1471,34 @@ function launchApp(){
   initMainMap();
   renderCenters();
   applyLang(curLang);
+  // تشغيل مستمعي Firebase
+  startPubChatListener();
+  startNotifListener();
+  if(rooms.length) rooms.forEach(r=>startPvtListener(r.id));
+  // تحميل المستخدمين من Firebase
+  if(_db){
+    _db.collection('users').get().then(s=>{
+      s.forEach(d=>{
+        const data=d.data(); const id=d.id;
+        const idx=users.findIndex(x=>x.id===id);
+        if(idx>-1){users[idx].approved=data.approved;}
+        else users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});
+      });
+      saveData(); updateStats(); updateLoginStats();
+    }).catch(()=>{});
+    // مراقبة المستخدمين الجدد للمديرة
+    if(currentUser.isAdmin){
+      _db.collection('users').onSnapshot(s=>{
+        s.docChanges().forEach(c=>{
+          const data=c.doc.data(); const id=c.doc.id;
+          if(c.type==='modified'){const u=users.find(x=>x.id===id);if(u)u.approved=data.approved;saveData();}
+          if(c.type==='added'&&!users.find(x=>x.id===id))
+            users.push({...data,id,joined:data.joined?new Date(data.joined):new Date()});
+        });
+        updateStats();
+      });
+    }
+  }
   const sbAvEl=document.getElementById('sbAv');if(sbAvEl)sbAvEl.textContent=currentUser.name[0];
   const sbNmEl=document.getElementById('sbNm');if(sbNmEl)sbNmEl.textContent=currentUser.name;
   const sbRlEl=document.getElementById('sbRl');if(sbRlEl)sbRlEl.textContent=currentUser.isAdmin?(currentUser.isAssistant?'مديرة التطبيق 2':'مديرة التطبيق'):'مستخدم مسجّل';
@@ -1670,6 +1807,17 @@ function submitReq(){
   updateStats();renderReqList();renderLatest();
   if(mapObj) renderMap('all');
   addNotification(`🆘 طلب دم ${blood} جديد في ${gov} – ${urgAr(selUrg)}`,'🩸');
+  if(_db){
+    // إشعار لجميع المتبرعين المتاحين من نفس المحافظة
+    users.filter(u=>u.isDonor&&u.avail&&u.gov===gov&&u.id!==currentUser.id&&u.approved).forEach(u=>{
+      fbNotify(u.id, `🆘 طلب ${blood} عاجل في ${gov} – ${urgAr(selUrg)}`, '🩸');
+    });
+    // إشعار للمديرة
+    fbNotify('admin', `طلب دم ${blood} جديد من ${currentUser.name} في ${gov}`, '🆘');
+    fbNotify('assistant', `طلب دم ${blood} جديد من ${currentUser.name} في ${gov}`, '🆘');
+    // حفظ الطلب في Firebase
+    fbSave('requests', requests[requests.length-1].id, requests[requests.length-1]);
+  }
   showAlert('✅ تم إرسال الطلب – سيتم إشعار المتبرعين','s');
   showBadge('🆘','تم إرسال طلب الدم!','سيتم إشعار المتبرعين المتاحين قريباً',3000);
 }
@@ -1854,9 +2002,12 @@ function sendPub(){
   if(!currentUser){showAlert('يجب تسجيل الدخول','e');return;}
   const inp=document.getElementById('pubIn');
   const txt=inp.value.trim();if(!txt) return;
-  pubMsgs.push({id:Date.now(),sid:currentUser.id,sname:currentUser.name,txt,time:new Date()});
-  saveData();
-  inp.value='';renderPubChat();
+  inp.value='';
+  const msgId='pm_'+Date.now();
+  const msgData={id:msgId,sid:currentUser.id,sname:currentUser.name,txt,timeMs:Date.now()};
+  pubMsgs.push({...msgData,time:new Date()});
+  saveData(); renderPubChat();
+  if(_db){_db.collection('pubMsgs').doc(msgId).set(msgData).catch(()=>{});}
 }
 
 function renderPubChat(){
@@ -1960,19 +2111,23 @@ function sendPvt(){
   if(!currentUser||!currentRoom) return;
   const inp=document.getElementById('pvtIn');
   const txt=inp.value.trim();if(!txt) return;
+  inp.value='';
+  const msgId='pv_'+Date.now();
+  const msgData={id:msgId,sid:currentUser.id,txt,timeMs:Date.now()};
   pvtMsgs[currentRoom]=pvtMsgs[currentRoom]||[];
-  pvtMsgs[currentRoom].push({id:Date.now(),sid:currentUser.id,txt,time:new Date()});
+  pvtMsgs[currentRoom].push({...msgData,time:new Date()});
   const r=rooms.find(x=>x.id===currentRoom);
-  if(r){
-    r.last=txt;
-    saveData();
-    if(currentUser.isAdmin){
-      const otherId=r.mids.find(x=>x!=='admin');
-      const otherUser=users.find(u=>u.id===otherId);
-      if(otherUser) addNotification(`ردّت عليك المديرة أفنان: ${txt.substring(0,40)}`,'💬');
+  if(r){r.last=txt; saveData();}
+  renderPvt();
+  // حفظ في Firebase
+  if(_db){
+    _db.collection('pvtRooms').doc(currentRoom).collection('msgs').doc(msgId).set(msgData).catch(()=>{});
+    // إرسال إشعار للطرف الآخر
+    const otherId = r?r.mids.find(x=>x!==currentUser.id):null;
+    if(otherId){
+      fbNotify(otherId, `${currentUser.name}: ${txt.substring(0,40)}`, '💬');
     }
   }
-  inp.value='';renderPvt();
 }
 
 function renderPvt(){
@@ -2073,6 +2228,7 @@ function approveUser(id){
   addNotification(`✅ تمت الموافقة على ${u.name}`,'✅');
   renderAdminPage();updateStats();
   showAlert(`✅ تمت الموافقة على ${u.name} – يمكنه الآن تسجيل الدخول`,'s');
+  fbNotify(u.id, `تمت الموافقة على حسابك! يمكنك الدخول الآن 🎉`, '✅');
   showBadge('✅','تمت الموافقة!',`تم قبول حساب ${u.name} بنجاح`,2000);
 }
 
