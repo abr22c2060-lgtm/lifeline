@@ -101,6 +101,14 @@ body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:v
 .lerr{background:rgba(198,40,40,.15);border:1px solid rgba(198,40,40,.3);color:#FFCDD2;
   border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;display:none}
 
+/* ══ أيقونة العين للباسورد ══ */
+.pass-wrap{position:relative}
+.pass-wrap input{padding-left:44px!important}
+.pass-eye{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);
+  font-size:18px;padding:4px;transition:.2s;z-index:2}
+.pass-eye:hover{color:rgba(255,255,255,.8)}
+
 /* ══ التطبيق ══ */
 #app{display:none}
 nav{
@@ -466,7 +474,10 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
         </div>
         <div class="lgroup">
           <label>🔒 كلمة المرور</label>
-          <input id="lPass" type="password" placeholder="••••••••">
+          <div class="pass-wrap">
+            <input id="lPass" type="password" placeholder="••••••••">
+            <button type="button" class="pass-eye" onclick="togglePass('lPass',this)" title="إظهار/إخفاء">👁️</button>
+          </div>
         </div>
         <div class="remember-row">
           <input type="checkbox" id="rememberMe" checked>
@@ -484,7 +495,12 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
           <div class="lgroup"><label>📞 الهاتف</label><input id="rPhone" placeholder="07xxxxxxxx"></div>
         </div>
         <div class="lgroup"><label>📧 البريد</label><input id="rEmail" type="email" placeholder="example@mail.com"></div>
-        <div class="lgroup"><label>🔒 كلمة المرور</label><input id="rPass" type="password" placeholder="••••••••"></div>
+        <div class="lgroup"><label>🔒 كلمة المرور</label>
+          <div class="pass-wrap">
+            <input id="rPass" type="password" placeholder="••••••••">
+            <button type="button" class="pass-eye" onclick="togglePass('rPass',this)" title="إظهار/إخفاء">👁️</button>
+          </div>
+        </div>
         <div class="lrow">
           <div class="lgroup"><label>🩸 فصيلة الدم</label>
             <select id="rBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option selected>O+</option><option>O-</option></select>
@@ -548,29 +564,28 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
       <button class="sb-x" onclick="closeSB()">×</button>
     </div>
     <div class="sb-body">
-      <button class="sb-btn on" id="sn-home"     onclick="goP('home')">    <span class="sb-ico">🏠</span><span class="sb-lbl">الرئيسية</span></button>
-      <button class="sb-btn"   id="sn-search"   onclick="goP('search')">   <span class="sb-ico">🔍</span><span class="sb-lbl">البحث</span></button>
-      <button class="sb-btn"   id="sn-requests" onclick="goP('requests')"> <span class="sb-ico">🩸</span><span class="sb-lbl">طلبات الدم</span></button>
-      <button class="sb-btn"   id="sn-map"      onclick="goP('map')">      <span class="sb-ico">🗺️</span><span class="sb-lbl">الخريطة</span></button>
-      <button class="sb-btn"   id="sn-donate"   onclick="goP('donate')">   <span class="sb-ico">❤️</span><span class="sb-lbl">تبرع بالدم</span></button>
-      <button class="sb-btn"   id="sn-health"   onclick="goP('health')">   <span class="sb-ico">💊</span><span class="sb-lbl">صحتي</span></button>
-      <button class="sb-btn"   id="sn-chat"     onclick="goP('chat')">     <span class="sb-ico">💬</span><span class="sb-lbl">الرسائل</span></button>
+      <button class="sb-btn on" id="sn-home"     onclick="goP('home')">    <span class="sb-ico">🏠</span><span class="sb-lbl" data-i18n="home">الرئيسية</span></button>
+      <button class="sb-btn"   id="sn-search"   onclick="goP('search')">   <span class="sb-ico">🔍</span><span class="sb-lbl" data-i18n="search">البحث</span></button>
+      <button class="sb-btn"   id="sn-requests" onclick="goP('requests')"> <span class="sb-ico">🩸</span><span class="sb-lbl" data-i18n="requests">طلبات الدم</span></button>
+      <button class="sb-btn"   id="sn-map"      onclick="goP('map')">      <span class="sb-ico">🗺️</span><span class="sb-lbl" data-i18n="map">الخريطة</span></button>
+      <button class="sb-btn"   id="sn-donate"   onclick="goP('donate')">   <span class="sb-ico">❤️</span><span class="sb-lbl" data-i18n="donate">تبرع بالدم</span></button>
+      <button class="sb-btn"   id="sn-health"   onclick="goP('health')">   <span class="sb-ico">💊</span><span class="sb-lbl" data-i18n="health">صحتي</span></button>
+      <button class="sb-btn"   id="sn-chat"     onclick="goP('chat')">     <span class="sb-ico">💬</span><span class="sb-lbl" data-i18n="chat">الرسائل</span></button>
       <div class="sb-div"></div>
-      <button class="sb-btn admin-only" id="sn-admin" onclick="goP('admin')"><span class="sb-ico">⚙️</span><span class="sb-lbl">لوحة الإدارة</span></button>
-      <button class="sb-btn"   id="sn-profile"  onclick="goP('profile')">  <span class="sb-ico">👤</span><span class="sb-lbl">حسابي</span></button>
-      <button class="sb-btn"   id="sn-lang"     onclick="openLangM()">     <span class="sb-ico">🌐</span><span class="sb-lbl">اللغة</span></button>
-      <button class="sb-btn"   id="sn-centers" onclick="goP('centers')"> <span class="sb-ico">🏥</span><span class="sb-lbl">المراكز الصحية</span></button>
-      <button class="sb-btn"   id="sn-about"    onclick="openAboutM()">    <span class="sb-ico">ℹ️</span><span class="sb-lbl">عن التطبيق</span></button>
+      <button class="sb-btn admin-only" id="sn-admin" onclick="goP('admin')"><span class="sb-ico">⚙️</span><span class="sb-lbl" data-i18n="admin">لوحة الإدارة</span></button>
+      <button class="sb-btn"   id="sn-profile"  onclick="goP('profile')">  <span class="sb-ico">👤</span><span class="sb-lbl" data-i18n="profile">حسابي</span></button>
+      <button class="sb-btn"   id="sn-lang"     onclick="openLangM()">     <span class="sb-ico">🌐</span><span class="sb-lbl" data-i18n="lang">اللغة</span></button>
+      <button class="sb-btn"   id="sn-about"    onclick="openAboutM()">    <span class="sb-ico">ℹ️</span><span class="sb-lbl" data-i18n="about">عن التطبيق</span></button>
     </div>
     <div class="sb-foot">
-      <button class="sb-btn" onclick="doLogout()" style="color:#FFCDD2"><span class="sb-ico">🚪</span><span class="sb-lbl">تسجيل الخروج</span></button>
+      <button class="sb-btn" onclick="doLogout()" style="color:#FFCDD2"><span class="sb-ico">🚪</span><span class="sb-lbl" data-i18n="logout">تسجيل الخروج</span></button>
     </div>
   </div>
 
   <!-- لوحة الإشعارات -->
   <div class="notif-panel" id="notifPanel">
-    <div class="notif-head">🔔 الإشعارات <button onclick="toggleNotif()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px">×</button></div>
-    <div id="notifList"><div class="notif-empty">لا توجد إشعارات</div></div>
+    <div class="notif-head">🔔 <span data-i18n="notifications">الإشعارات</span> <button onclick="toggleNotif()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px">×</button></div>
+    <div id="notifList"><div class="notif-empty" data-i18n="noNotifs">لا توجد إشعارات</div></div>
   </div>
 
   <main>
@@ -706,48 +721,9 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 
     <!-- ════ التبرع بالدم ════ -->
     <div class="page" id="page-donate">
-      <div class="hero" style="background:linear-gradient(135deg,#7B1FA2,#C62828,#E53935)">
-        <div class="hero-content">
-          <h1>❤️ تبرع بالدم – أنقذ حياة</h1>
-          <p>كل تبرع يمكن أن ينقذ حياة إنسان. كن البطل الذي ينتظره شخص ما اليوم!</p>
-          <div class="hero-btns">
-            <button class="btn" style="background:#fff;color:#C62828" onclick="openModal('mDonorReg')">🩸 سجّل كمتبرع الآن</button>
-            <button class="btn" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.5)" onclick="openModal('mRequest')">🆘 اطلب دماً</button>
-          </div>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:24px">
-        <div class="sec" style="text-align:center;border-top:4px solid #C62828">
-          <div style="font-size:48px;margin-bottom:10px">🩸</div>
-          <h3 style="margin-bottom:8px;color:#C62828">من يمكنه التبرع؟</h3>
-          <p style="color:var(--gray);font-size:13px;line-height:1.8">عمرك بين 18-65 سنة<br>وزنك أكثر من 50 كغم<br>لا تعاني من أمراض مزمنة<br>لم تتبرع منذ 3 أشهر</p>
-        </div>
-        <div class="sec" style="text-align:center;border-top:4px solid var(--green)">
-          <div style="font-size:48px;margin-bottom:10px">💪</div>
-          <h3 style="margin-bottom:8px;color:var(--green)">فوائد التبرع</h3>
-          <p style="color:var(--gray);font-size:13px;line-height:1.8">تحسين صحة القلب<br>حرق السعرات الحرارية<br>تجديد خلايا الدم<br>شعور بالسعادة والرضا</p>
-        </div>
-        <div class="sec" style="text-align:center;border-top:4px solid var(--blue)">
-          <div style="font-size:48px;margin-bottom:10px">📋</div>
-          <h3 style="margin-bottom:8px;color:var(--blue)">خطوات التبرع</h3>
-          <p style="color:var(--gray);font-size:13px;line-height:1.8">1. سجّل في التطبيق<br>2. اختر مركز الدم<br>3. أجرِ الفحص الأولي<br>4. تبرع واستلم شهادتك</p>
-        </div>
-        <div class="sec" style="text-align:center;border-top:4px solid var(--gold)">
-          <div style="font-size:48px;margin-bottom:10px">🏆</div>
-          <h3 style="margin-bottom:8px;color:var(--gold)">متبرعو الشهر</h3>
-          <p style="font-size:13px;color:var(--gray)">أفنان طه عفين – مديرة التطبيق</p>
-        </div>
-      </div>
+      <div id="donatePageContent"></div>
       <div class="sec">
-        <div class="sec-head"><h2>🏥 مراكز التبرع في الأنبار</h2></div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
-          <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مصرف دم الأنبار – الرمادي</h4><p>الرمادي – شارع الجمهورية</p><p>📞 07802345678</p></div></div>
-          <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مصرف دم الفلوجة</h4><p>الفلوجة – المركز الصحي العام</p><p>📞 07803456789</p></div></div>
-          <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مركز دم هيت</h4><p>هيت – مستشفى هيت العام</p><p>📞 07809012345</p></div></div>
-        </div>
-      </div>
-      <div class="sec">
-        <div class="sec-head"><h2>❤️ حالتك كمتبرع</h2></div>
+        <div class="sec-head"><h2 id="donateStatusTitle">❤️ حالتك كمتبرع</h2></div>
         <div id="donateUserStatus"></div>
       </div>
     </div>
@@ -824,42 +800,42 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال طلب الدم ════ -->
 <div class="modal" id="mRequest">
   <div class="mbox">
-    <div class="mhead"><h3>🆘 طلب دم جديد</h3><button class="mclose" onclick="closeModal('mRequest')">×</button></div>
+    <div class="mhead"><h3 data-i18n="reqModalTitle">🆘 طلب دم جديد</h3><button class="mclose" onclick="closeModal('mRequest')">×</button></div>
     <div class="mbody">
       <div class="frow">
-        <div class="fg"><label>فصيلة الدم</label>
+        <div class="fg"><label data-i18n="reqBloodType">فصيلة الدم</label>
           <select id="qBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option selected>O+</option><option>O-</option></select>
         </div>
-        <div class="fg"><label>المحافظة</label>
+        <div class="fg"><label data-i18n="reqGov">المحافظة</label>
           <select id="qGov" onchange="fillRegions('qReg',this.value)"></select>
         </div>
       </div>
-      <div class="fg"><label>المنطقة</label><select id="qReg"><option>اختر المحافظة</option></select></div>
-      <div class="fg"><label>المستشفى</label><input id="qHosp" placeholder="اسم المستشفى أو المركز الصحي"></div>
+      <div class="fg"><label data-i18n="reqRegion">المنطقة</label><select id="qReg"><option data-i18n="allRegions">اختر المحافظة</option></select></div>
+      <div class="fg"><label data-i18n="reqHosp">المستشفى</label><input id="qHosp" data-i18n-ph="reqHospPh" placeholder="اسم المستشفى أو المركز الصحي"></div>
       <div class="fg">
-        <label>درجة الاستعجال</label>
+        <label data-i18n="reqUrgency">درجة الاستعجال</label>
         <div class="chips" id="urgChips">
-          <button class="chip" onclick="setUrg('Low',this)" style="border-color:#757575;color:#757575">منخفض</button>
-          <button class="chip" onclick="setUrg('Medium',this)" style="border-color:#1565C0;background:#E3F2FD;color:#1565C0">متوسط ✓</button>
-          <button class="chip" onclick="setUrg('High',this)" style="border-color:#BF360C;color:#BF360C">عالي</button>
-          <button class="chip" onclick="setUrg('Critical',this)" style="border-color:#B71C1C;color:#B71C1C">حرج 🚨</button>
+          <button class="chip" onclick="setUrg('Low',this)" style="border-color:#757575;color:#757575" data-i18n="urgLow">منخفض</button>
+          <button class="chip" onclick="setUrg('Medium',this)" style="border-color:#1565C0;background:#E3F2FD;color:#1565C0" data-i18n="urgMedium">متوسط ✓</button>
+          <button class="chip" onclick="setUrg('High',this)" style="border-color:#BF360C;color:#BF360C" data-i18n="urgHigh">عالي</button>
+          <button class="chip" onclick="setUrg('Critical',this)" style="border-color:#B71C1C;color:#B71C1C" data-i18n="urgCritical">حرج 🚨</button>
         </div>
       </div>
       <div class="fg">
-        <label>📍 تحديد الموقع على الخريطة</label>
-        <button class="btn btn-outline btn-sm" onclick="openLocPicker()" style="margin-bottom:8px">🗺️ اختر على الخريطة</button>
+        <label>📍 <span data-i18n="reqPickLoc">تحديد الموقع على الخريطة</span></label>
+        <button class="btn btn-outline btn-sm" onclick="openLocPicker()" style="margin-bottom:8px">🗺️ <span data-i18n="reqPickBtn">اختر على الخريطة</span></button>
         <span id="pickedLocTxt" style="font-size:12px;color:var(--gray)"></span>
         <div class="picker-wrap" id="pickerWrap" style="display:none;margin-top:10px">
           <div id="pickerMap" style="height:300px;border-radius:12px;border:2px solid #e0e0e0;position:relative;z-index:1"></div>
           <div style="padding:10px;background:#f8f8f8;border-radius:0 0 12px 12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <span id="pickerInfo" style="font-size:12px;color:var(--gray);flex:1">اضغط على الخريطة لتحديد الموقع</span>
-            <button class="btn btn-blue btn-sm" onclick="pickerGPS()">📍 موقعي</button>
-            <button class="btn btn-green btn-sm" onclick="closePicker()" id="confirmLocBtn" disabled>✅ تأكيد</button>
+            <span id="pickerInfo" style="font-size:12px;color:var(--gray);flex:1" data-i18n="reqPickHint">اضغط على الخريطة لتحديد الموقع</span>
+            <button class="btn btn-blue btn-sm" onclick="pickerGPS()">📍 <span data-i18n="myLoc">موقعي</span></button>
+            <button class="btn btn-green btn-sm" onclick="closePicker()" id="confirmLocBtn" disabled>✅ <span data-i18n="confirm">تأكيد</span></button>
           </div>
         </div>
       </div>
-      <div class="fg"><label>ملاحظات</label><textarea id="qNotes" rows="2" placeholder="أضف أي معلومات..."></textarea></div>
-      <button class="btn btn-red btn-block" onclick="submitReq()">إرسال الطلب 🚀</button>
+      <div class="fg"><label data-i18n="reqNotes">ملاحظات</label><textarea id="qNotes" rows="2" data-i18n-ph="reqNotesPh" placeholder="أضف أي معلومات..."></textarea></div>
+      <button class="btn btn-red btn-block" onclick="submitReq()" data-i18n="reqSendBtn">إرسال الطلب 🚀</button>
     </div>
   </div>
 </div>
@@ -867,9 +843,9 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال التقييم ════ -->
 <div class="modal" id="mRate">
   <div class="mbox">
-    <div class="mhead"><h3>⭐ تقييم التبرع</h3><button class="mclose" onclick="closeModal('mRate')">×</button></div>
+    <div class="mhead"><h3 data-i18n="rateTitle">⭐ تقييم التبرع</h3><button class="mclose" onclick="closeModal('mRate')">×</button></div>
     <div class="mbody">
-      <p style="margin-bottom:16px;color:var(--gray)">كيف كانت تجربة التبرع؟ تقييمك يساعد المجتمع</p>
+      <p style="margin-bottom:16px;color:var(--gray)" data-i18n="rateSubtitle">كيف كانت تجربة التبرع؟ تقييمك يساعد المجتمع</p>
       <div class="stars" id="rateStars">
         <span class="star" onclick="setStar(1)">★</span>
         <span class="star" onclick="setStar(2)">★</span>
@@ -877,8 +853,8 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
         <span class="star" onclick="setStar(4)">★</span>
         <span class="star" onclick="setStar(5)">★</span>
       </div>
-      <div class="fg" style="margin-top:18px"><label>تعليق (اختياري)</label><textarea id="rateComment" rows="3" placeholder="اكتب تعليقك..."></textarea></div>
-      <button class="btn btn-gold btn-block" onclick="submitRating()">إرسال التقييم ⭐</button>
+      <div class="fg" style="margin-top:18px"><label data-i18n="rateComment">تعليق (اختياري)</label><textarea id="rateComment" rows="3" data-i18n-ph="rateCommentPh" placeholder="اكتب تعليقك..."></textarea></div>
+      <button class="btn btn-gold btn-block" onclick="submitRating()" data-i18n="rateSendBtn">إرسال التقييم ⭐</button>
     </div>
   </div>
 </div>
@@ -886,18 +862,18 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال الصحة ════ -->
 <div class="modal" id="mHealth">
   <div class="mbox">
-    <div class="mhead"><h3>💊 تسجيل قراءة صحية</h3><button class="mclose" onclick="closeModal('mHealth')">×</button></div>
+    <div class="mhead"><h3 data-i18n="healthModalTitle">💊 تسجيل قراءة صحية</h3><button class="mclose" onclick="closeModal('mHealth')">×</button></div>
     <div class="mbody">
       <div class="frow">
-        <div class="fg"><label>ضغط الدم (sys)</label><input id="hSys" type="number" placeholder="120"></div>
-        <div class="fg"><label>ضغط الدم (dia)</label><input id="hDia" type="number" placeholder="80"></div>
+        <div class="fg"><label data-i18n="healthSys">ضغط الدم (sys)</label><input id="hSys" type="number" placeholder="120"></div>
+        <div class="fg"><label data-i18n="healthDia">ضغط الدم (dia)</label><input id="hDia" type="number" placeholder="80"></div>
       </div>
       <div class="frow">
-        <div class="fg"><label>نبضات القلب</label><input id="hHR" type="number" placeholder="72"></div>
-        <div class="fg"><label>الوزن (كغم)</label><input id="hWeight" type="number" placeholder="70"></div>
+        <div class="fg"><label data-i18n="healthHR">نبضات القلب</label><input id="hHR" type="number" placeholder="72"></div>
+        <div class="fg"><label data-i18n="healthWeight">الوزن (كغم)</label><input id="hWeight" type="number" placeholder="70"></div>
       </div>
-      <div class="fg"><label>ملاحظات</label><textarea id="hNotes" rows="2" placeholder="أي ملاحظات..."></textarea></div>
-      <button class="btn btn-green btn-block" onclick="saveHealth()">حفظ القراءة ✅</button>
+      <div class="fg"><label data-i18n="reqNotes">ملاحظات</label><textarea id="hNotes" rows="2" data-i18n-ph="notesAnyPh" placeholder="أي ملاحظات..."></textarea></div>
+      <button class="btn btn-green btn-block" onclick="saveHealth()" data-i18n="healthSaveBtn">حفظ القراءة ✅</button>
     </div>
   </div>
 </div>
@@ -905,38 +881,38 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال تعديل المستخدم (للمديرة) ════ -->
 <div class="modal" id="mEditUser">
   <div class="mbox mbox-lg">
-    <div class="mhead"><h3>✏️ تعديل بيانات المستخدم</h3><button class="mclose" onclick="closeModal('mEditUser')">×</button></div>
+    <div class="mhead"><h3 data-i18n="editUserTitle">✏️ تعديل بيانات المستخدم</h3><button class="mclose" onclick="closeModal('mEditUser')">×</button></div>
     <div class="mbody">
       <div class="frow">
-        <div class="fg"><label>👤 الاسم</label><input id="euName" placeholder="الاسم الكامل"></div>
-        <div class="fg"><label>📞 الهاتف</label><input id="euPhone" placeholder="07xxxxxxxx"></div>
+        <div class="fg"><label data-i18n="nameLbl">👤 الاسم</label><input id="euName" data-i18n-ph="fullNamePh" placeholder="الاسم الكامل"></div>
+        <div class="fg"><label data-i18n="phoneLbl">📞 الهاتف</label><input id="euPhone" placeholder="07xxxxxxxx"></div>
       </div>
-      <div class="fg"><label>📧 البريد الإلكتروني</label><input id="euEmail" type="email"></div>
+      <div class="fg"><label data-i18n="emailLbl">📧 البريد الإلكتروني</label><input id="euEmail" type="email"></div>
       <div class="frow">
-        <div class="fg"><label>🩸 فصيلة الدم</label>
+        <div class="fg"><label data-i18n="bloodType">🩸 فصيلة الدم</label>
           <select id="euBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
         </div>
-        <div class="fg"><label>🏛️ المحافظة</label>
+        <div class="fg"><label data-i18n="gov">🏛️ المحافظة</label>
           <select id="euGov" onchange="fillRegions('euReg',this.value)"></select>
         </div>
       </div>
-      <div class="fg"><label>📍 المنطقة</label><select id="euReg"></select></div>
+      <div class="fg"><label data-i18n="region">📍 المنطقة</label><select id="euReg"></select></div>
       <div class="frow">
-        <div class="fg"><label>الحالة</label>
+        <div class="fg"><label data-i18n="statusLbl">الحالة</label>
           <select id="euApproved">
-            <option value="true">✅ موافق عليه</option>
-            <option value="false">⏳ قيد المراجعة</option>
+            <option value="true" data-i18n="approvedOpt">✅ موافق عليه</option>
+            <option value="false" data-i18n="pendingOpt">⏳ قيد المراجعة</option>
           </select>
         </div>
-        <div class="fg"><label>حالة التبرع</label>
+        <div class="fg"><label data-i18n="donationStatus">حالة التبرع</label>
           <select id="euAvail">
-            <option value="true">✅ متاح للتبرع</option>
-            <option value="false">⏳ غير متاح</option>
+            <option value="true" data-i18n="availYes">✅ متاح للتبرع</option>
+            <option value="false" data-i18n="availNo">⏳ غير متاح</option>
           </select>
         </div>
       </div>
       <input type="hidden" id="euId">
-      <button class="btn btn-red btn-block" onclick="saveUserEdit()">💾 حفظ التعديلات</button>
+      <button class="btn btn-red btn-block" onclick="saveUserEdit()" data-i18n="saveEdits">💾 حفظ التعديلات</button>
     </div>
   </div>
 </div>
@@ -944,33 +920,33 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال تعديل الطلب (للمديرة) ════ -->
 <div class="modal" id="mEditReq">
   <div class="mbox">
-    <div class="mhead"><h3>✏️ تعديل طلب الدم</h3><button class="mclose" onclick="closeModal('mEditReq')">×</button></div>
+    <div class="mhead"><h3 data-i18n="editReqTitle">✏️ تعديل طلب الدم</h3><button class="mclose" onclick="closeModal('mEditReq')">×</button></div>
     <div class="mbody">
       <div class="frow">
-        <div class="fg"><label>فصيلة الدم</label>
+        <div class="fg"><label data-i18n="bloodType">فصيلة الدم</label>
           <select id="erBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
         </div>
-        <div class="fg"><label>المستشفى</label><input id="erHosp"></div>
+        <div class="fg"><label data-i18n="reqHosp">المستشفى</label><input id="erHosp"></div>
       </div>
       <div class="frow">
-        <div class="fg"><label>درجة الاستعجال</label>
+        <div class="fg"><label data-i18n="reqUrgency">درجة الاستعجال</label>
           <select id="erUrg">
-            <option value="Low">منخفض</option>
-            <option value="Medium">متوسط</option>
-            <option value="High">عالي</option>
-            <option value="Critical">حرج 🚨</option>
+            <option value="Low" data-i18n="urgLow">منخفض</option>
+            <option value="Medium" data-i18n="urgMedium2">متوسط</option>
+            <option value="High" data-i18n="urgHigh">عالي</option>
+            <option value="Critical" data-i18n="urgCritical2">حرج 🚨</option>
           </select>
         </div>
-        <div class="fg"><label>الحالة</label>
+        <div class="fg"><label data-i18n="statusLbl">الحالة</label>
           <select id="erStatus">
-            <option value="Pending">⏳ انتظار</option>
-            <option value="Completed">✅ مكتمل</option>
+            <option value="Pending" data-i18n="statusPending2">⏳ انتظار</option>
+            <option value="Completed" data-i18n="statusCompleted2">✅ مكتمل</option>
           </select>
         </div>
       </div>
-      <div class="fg"><label>ملاحظات</label><textarea id="erNotes" rows="2"></textarea></div>
+      <div class="fg"><label data-i18n="reqNotes">ملاحظات</label><textarea id="erNotes" rows="2"></textarea></div>
       <input type="hidden" id="erId">
-      <button class="btn btn-red btn-block" onclick="saveReqEdit()">💾 حفظ التعديلات</button>
+      <button class="btn btn-red btn-block" onclick="saveReqEdit()" data-i18n="saveEdits">💾 حفظ التعديلات</button>
     </div>
   </div>
 </div>
@@ -978,57 +954,57 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال تسجيل المتبرع التفصيلي ════ -->
 <div class="modal" id="mDonorReg">
   <div class="mbox mbox-lg">
-    <div class="mhead"><h3>🩸 تسجيل كمتبرع بالدم</h3><button class="mclose" onclick="closeModal('mDonorReg')">×</button></div>
+    <div class="mhead"><h3 data-i18n="donorRegTitle">🩸 تسجيل كمتبرع بالدم</h3><button class="mclose" onclick="closeModal('mDonorReg')">×</button></div>
     <div class="mbody">
-      <div style="background:#FFF5F5;border-radius:10px;padding:12px 16px;margin-bottom:18px;border-right:4px solid var(--red);font-size:13px;color:var(--dark)">
+      <div style="background:#FFF5F5;border-radius:10px;padding:12px 16px;margin-bottom:18px;border-right:4px solid var(--red);font-size:13px;color:var(--dark)" data-i18n="donorRegNote">
         💡 يرجى ملء جميع المعلومات بدقة – ستُعرض للمديرة أفنان طه عفين للمراجعة والموافقة
       </div>
       <div class="frow">
-        <div class="fg"><label>👤 الاسم الكامل</label><input id="drName" placeholder="الاسم الثلاثي"></div>
-        <div class="fg"><label>🎂 العمر</label><input id="drAge" type="number" min="18" max="65" placeholder="مثال: 25"></div>
+        <div class="fg"><label data-i18n="drNameLbl">👤 الاسم الكامل</label><input id="drName" data-i18n-ph="drNamePh" placeholder="الاسم الثلاثي"></div>
+        <div class="fg"><label data-i18n="drAgeLbl">🎂 العمر</label><input id="drAge" type="number" min="18" max="65" data-i18n-ph="drAgePh" placeholder="مثال: 25"></div>
       </div>
       <div class="frow">
-        <div class="fg"><label>🩸 فصيلة الدم</label>
+        <div class="fg"><label data-i18n="bloodType">🩸 فصيلة الدم</label>
           <select id="drBlood"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option selected>O+</option><option>O-</option></select>
         </div>
-        <div class="fg"><label>⚖️ الوزن (كغم)</label><input id="drWeight" type="number" placeholder="مثال: 70"></div>
+        <div class="fg"><label data-i18n="drWeightLbl">⚖️ الوزن (كغم)</label><input id="drWeight" type="number" data-i18n-ph="drWeightPh" placeholder="مثال: 70"></div>
       </div>
       <div class="frow">
-        <div class="fg"><label>🏛️ المحافظة</label>
+        <div class="fg"><label data-i18n="gov">🏛️ المحافظة</label>
           <select id="drGov" onchange="fillRegions('drReg',this.value)">
-            <option value="">اختر المحافظة</option>
+            <option value="" data-i18n="chooseGov">اختر المحافظة</option>
           </select>
         </div>
-        <div class="fg"><label>📍 المنطقة</label><select id="drReg"><option value="">اختر المحافظة أولاً</option></select></div>
+        <div class="fg"><label data-i18n="region">📍 المنطقة</label><select id="drReg"><option value="" data-i18n="chooseGovFirst">اختر المحافظة أولاً</option></select></div>
       </div>
-      <div class="fg"><label>📞 رقم الهاتف للتواصل</label><input id="drPhone" placeholder="07xxxxxxxx"></div>
+      <div class="fg"><label data-i18n="drPhoneLbl">📞 رقم الهاتف للتواصل</label><input id="drPhone" placeholder="07xxxxxxxx"></div>
       <div class="fg">
-        <label>🏥 هل تعاني من أي أمراض مزمنة؟</label>
+        <label data-i18n="drDiseaseLbl">🏥 هل تعاني من أي أمراض مزمنة؟</label>
         <div style="display:flex;gap:12px;margin-top:8px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600">
-            <input type="radio" name="drDisease" id="drDiseaseNo" value="لا" checked style="accent-color:var(--red);width:18px;height:18px"> لا، أنا بصحة جيدة
+            <input type="radio" name="drDisease" id="drDiseaseNo" value="لا" checked style="accent-color:var(--red);width:18px;height:18px"> <span data-i18n="drDiseaseNo">لا، أنا بصحة جيدة</span>
           </label>
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600">
-            <input type="radio" name="drDisease" id="drDiseaseYes" value="نعم" style="accent-color:var(--red);width:18px;height:18px"> نعم
+            <input type="radio" name="drDisease" id="drDiseaseYes" value="نعم" style="accent-color:var(--red);width:18px;height:18px"> <span data-i18n="drDiseaseYes">نعم</span>
           </label>
         </div>
         <div id="drDiseaseDetails" style="display:none;margin-top:10px">
-          <textarea id="drDiseaseText" rows="2" placeholder="اذكر نوع المرض أو الأدوية التي تتناولها..." style="width:100%;padding:10px;border:2px solid #e0e0e0;border-radius:8px;font-family:inherit;font-size:14px"></textarea>
+          <textarea id="drDiseaseText" rows="2" data-i18n-ph="drDiseasePh" placeholder="اذكر نوع المرض أو الأدوية التي تتناولها..." style="width:100%;padding:10px;border:2px solid #e0e0e0;border-radius:8px;font-family:inherit;font-size:14px"></textarea>
         </div>
       </div>
       <div class="fg">
-        <label>💉 آخر مرة تبرعت بالدم</label>
+        <label data-i18n="drLastDonateLbl">💉 آخر مرة تبرعت بالدم</label>
         <select id="drLastDonate">
-          <option value="لم أتبرع من قبل">لم أتبرع من قبل</option>
-          <option value="أقل من 3 أشهر">أقل من 3 أشهر (غير مؤهل حالياً)</option>
-          <option value="3-6 أشهر">منذ 3 إلى 6 أشهر</option>
-          <option value="أكثر من 6 أشهر">أكثر من 6 أشهر</option>
-          <option value="أكثر من سنة">أكثر من سنة</option>
+          <option value="لم أتبرع من قبل" data-i18n="drNever">لم أتبرع من قبل</option>
+          <option value="أقل من 3 أشهر" data-i18n="drLess3m">أقل من 3 أشهر (غير مؤهل حالياً)</option>
+          <option value="3-6 أشهر" data-i18n="dr3to6m">منذ 3 إلى 6 أشهر</option>
+          <option value="أكثر من 6 أشهر" data-i18n="drMore6m">أكثر من 6 أشهر</option>
+          <option value="أكثر من سنة" data-i18n="drMoreYear">أكثر من سنة</option>
         </select>
       </div>
-      <div class="fg"><label>📝 ملاحظات إضافية (اختياري)</label><textarea id="drNotes" rows="2" placeholder="أي معلومات تودّ إضافتها..."></textarea></div>
+      <div class="fg"><label data-i18n="drNotesLbl">📝 ملاحظات إضافية (اختياري)</label><textarea id="drNotes" rows="2" data-i18n-ph="drNotesPh" placeholder="أي معلومات تودّ إضافتها..."></textarea></div>
       <div id="drErr" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.3);color:#B71C1C;border-radius:8px;padding:10px;margin-bottom:12px;display:none"></div>
-      <button class="btn btn-red btn-block" onclick="submitDonorReg()" style="font-size:15px;padding:14px">🩸 إرسال طلب التسجيل كمتبرع</button>
+      <button class="btn btn-red btn-block" onclick="submitDonorReg()" style="font-size:15px;padding:14px" data-i18n="donorRegSubmit">🩸 إرسال طلب التسجيل كمتبرع</button>
     </div>
   </div>
 </div>
@@ -1036,23 +1012,23 @@ main{max-width:1200px;margin:76px auto 50px;padding:0 20px}
 <!-- ════ مودال إرسال رسالة للمديرة ════ -->
 <div class="modal" id="mContactAdmin">
   <div class="mbox">
-    <div class="mhead"><h3>💬 إرسال رسالة للمديرة</h3><button class="mclose" onclick="closeModal('mContactAdmin')">×</button></div>
+    <div class="mhead"><h3 data-i18n="contactAdminTitle">💬 إرسال رسالة للمديرة</h3><button class="mclose" onclick="closeModal('mContactAdmin')">×</button></div>
     <div class="mbody">
       <div style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFF8E1;border-radius:10px;margin-bottom:16px">
         <div style="width:46px;height:46px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#333">أ</div>
-        <div><div style="font-weight:800">أفنان طه عفين</div><div style="font-size:12px;color:var(--gray)">مديرة التطبيق – الأنبار، الرمادي الكورنيش</div></div>
+        <div><div style="font-weight:800">أفنان طه عفين</div><div style="font-size:12px;color:var(--gray)" data-i18n="adminRole">مديرة التطبيق – الأنبار، الرمادي الكورنيش</div></div>
       </div>
-      <div class="fg"><label>موضوع الرسالة</label>
+      <div class="fg"><label data-i18n="msgSubject">موضوع الرسالة</label>
         <select id="cmSubject">
-          <option>استفسار عام</option>
-          <option>مشكلة تقنية</option>
-          <option>طلب مساعدة</option>
-          <option>اقتراح</option>
-          <option>شكوى</option>
+          <option data-i18n="subjectGeneral">استفسار عام</option>
+          <option data-i18n="subjectTech">مشكلة تقنية</option>
+          <option data-i18n="subjectHelp">طلب مساعدة</option>
+          <option data-i18n="subjectSuggest">اقتراح</option>
+          <option data-i18n="subjectComplain">شكوى</option>
         </select>
       </div>
-      <div class="fg"><label>نص الرسالة</label><textarea id="cmText" rows="4" placeholder="اكتب رسالتك للمديرة..."></textarea></div>
-      <button class="btn btn-red btn-block" onclick="sendToAdmin()">إرسال ➤</button>
+      <div class="fg"><label data-i18n="msgText">نص الرسالة</label><textarea id="cmText" rows="4" data-i18n-ph="msgTextPh" placeholder="اكتب رسالتك للمديرة..."></textarea></div>
+      <button class="btn btn-red btn-block" onclick="sendToAdmin()" data-i18n="sendBtn">إرسال ➤</button>
     </div>
   </div>
 </div>
@@ -1180,6 +1156,20 @@ function initFirebase(){
     if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     _db = firebase.firestore();
     console.log('✅ Firebase جاهز');
+    // تفعيل Firebase Cloud Messaging للإشعارات عند إغلاق التطبيق
+    try {
+      if(firebase.messaging && 'serviceWorker' in navigator){
+        const messaging = firebase.messaging();
+        // عند وصول إشعار والتطبيق مفتوح
+        messaging.onMessage(payload => {
+          const {title, body} = payload.notification || {};
+          addNotification(body || title || '🔔 إشعار جديد', '🔔');
+          if(Notification.permission === 'granted'){
+            try{ new Notification(title||'Lifeline 🩸',{body:body||'',icon:'./icon-192.png'}); }catch(e){}
+          }
+        });
+      }
+    } catch(e){ console.log('FCM not available:', e.message); }
   } catch(e){ console.log('Firebase error:', e); }
 }
 
@@ -1228,35 +1218,71 @@ function startPvtListener(roomId){
       });
       saveData();
       if(currentRoom === roomId){
-        renderPvtChat();
+        renderPvt();
         // إشعار إذا الرسالة من شخص آخر
         const last = pvtMsgs[roomId]?.slice(-1)[0];
         if(last && last.sid !== currentUser?.id){
-          addNotification(`رسالة جديدة: ${last.txt.substring(0,40)}`, '💬');
+          addNotification(`رسالة جديدة من ${(users.find(u=>u.id===last.sid)||{name:'مستخدم'}).name}: ${last.txt.substring(0,40)}`, '💬');
+        }
+      } else {
+        // غرفة مش مفتوحة - نحدث عداد الرسائل غير المقروءة
+        const r = rooms.find(x=>x.id===roomId);
+        const last = pvtMsgs[roomId]?.slice(-1)[0];
+        if(r && last && last.sid !== currentUser?.id){
+          r.unread = (r.unread||0)+1;
+          r.last = last.txt;
+          saveData();
+          if(document.getElementById('pvtChat')?.style.display==='block') renderRooms();
         }
       }
     }, ()=>{});
 }
 
-// ══ مراقبة الإشعارات من Firebase ══
+// ══ مراقبة الإشعارات من Firebase (مُصلَحة) ══
 function startNotifListener(){
   if(!_db || !currentUser) return;
   if(_unsubNotif) _unsubNotif();
+  // نستخدم timeMs > الآن - 24 ساعة لنستقبل الإشعارات الجديدة فقط
+  const since = Date.now() - 24*60*60*1000;
   _unsubNotif = _db.collection('notifications')
     .where('toId', '==', currentUser.id)
     .where('read', '==', false)
-    .orderBy('timeMs', 'desc')
-    .limitToLast(20)
+    .where('timeMs', '>', since)
+    .orderBy('timeMs', 'asc')
     .onSnapshot(snap => {
       snap.docChanges().forEach(change => {
         if(change.type === 'added'){
           const data = change.doc.data();
           addNotification(data.msg, data.ico || '🔔');
-          // علّم كمقروء
-          _db.collection('notifications').doc(change.doc.id).update({read:true}).catch(()=>{});
+          // إشعار Push للمتصفح إذا كان التطبيق في الخلفية
+          if(document.hidden && Notification.permission === 'granted'){
+            try{
+              new Notification('Lifeline 🩸', {
+                body: data.msg,
+                icon: './icon-192.png',
+                badge: './icon-192.png',
+                tag: change.doc.id,
+                requireInteraction: true
+              });
+            }catch(e){}
+          }
+          // علّم كمقروء بعد ثانية
+          setTimeout(()=>{
+            _db.collection('notifications').doc(change.doc.id).update({read:true}).catch(()=>{});
+          }, 1000);
         }
       });
-    }, ()=>{});
+    }, (err)=>{ console.log('notif listener error:', err); });
+}
+
+// ══ طلب إذن الإشعارات ══
+function requestNotifPermission(){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default'){
+    Notification.requestPermission().then(p=>{
+      if(p === 'granted') showAlert('✅ تم تفعيل الإشعارات', 's');
+    });
+  }
 }
 
 // ══ إرسال إشعار لمستخدم عبر Firebase ══
@@ -1342,9 +1368,8 @@ function addDemoData(){
     {uid:'u1',uname:'علي حسن',stars:5,comment:'تجربة ممتازة وسريعة',date:new Date()},
     {uid:'u2',uname:'محمد خالد',stars:4,comment:'جيد جداً',date:new Date()},
   ];
-  healthRecords=[
-    {uid:'admin',sys:120,dia:80,hr:72,weight:75,date:new Date()},
-  ];
+  // التقارير الصحية تبدأ فارغة - تتعبأ من بيانات حقيقية
+  healthRecords=[];
 }
 
 function updateLoginStats(){
@@ -1357,6 +1382,21 @@ function updateLoginStats(){
 // ══════════════════════════════════════════════════════
 //  تسجيل الدخول / التسجيل
 // ══════════════════════════════════════════════════════
+// ══ إظهار/إخفاء الباسورد ══
+function togglePass(inputId, btn){
+  const inp = document.getElementById(inputId);
+  if(!inp) return;
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    btn.textContent = '🙈';
+    btn.style.color = 'rgba(255,255,255,.8)';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁️';
+    btn.style.color = 'rgba(255,255,255,.4)';
+  }
+}
+
 function switchLTab(tab,el){
   document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.lform').forEach(f=>f.classList.remove('active'));
@@ -1471,10 +1511,31 @@ function launchApp(){
   initMainMap();
   renderCenters();
   applyLang(curLang);
+  // طلب إذن إشعارات المتصفح
+  requestNotifPermission();
   // تشغيل مستمعي Firebase
   startPubChatListener();
   startNotifListener();
   if(rooms.length) rooms.forEach(r=>startPvtListener(r.id));
+  // تحميل غرف المحادثات من Firebase (الغرف الحقيقية)
+  if(_db){
+    _db.collection('pvtRooms')
+      .where('mids','array-contains', currentUser.id)
+      .get().then(snap=>{
+        snap.forEach(d=>{
+          const data=d.data();
+          const rid=d.id;
+          if(!rooms.find(r=>r.id===rid)){
+            rooms.push({id:rid,mids:data.mids||[],mnames:data.mnames||[],last:'',unread:0});
+            pvtMsgs[rid]=pvtMsgs[rid]||[];
+          }
+          // تشغيل listener لكل غرفة
+          if(!_unsubPvt[rid]) startPvtListener(rid);
+        });
+        saveData();
+        if(document.getElementById('pvtChat')?.style.display==='block') renderRooms();
+      }).catch(()=>{});
+  }
   // تحميل المستخدمين من Firebase
   if(_db){
     _db.collection('users').get().then(s=>{
@@ -1528,7 +1589,7 @@ function showPage(page,btn){
   const sn=document.getElementById('sn-'+page);if(sn)sn.classList.add('on');
   if(page==='map') setTimeout(()=>{mapObj&&mapObj.invalidateSize();renderMap('all');},150);
   if(page==='profile') renderProfile();
-  if(page==='donate') renderDonateStatus();
+  if(page==='donate'){renderDonatePage();renderDonateStatus();}
   if(page==='admin' && currentUser?.isAdmin) renderAdminPage();
   if(page==='centers') renderHealthCentersPage();
   if(page==='health') renderHealthCards();
@@ -1823,13 +1884,16 @@ function submitReq(){
 }
 
 function renderReqList(){
+  const L=LANGS[curLang]||LANGS.ar;
   const el=document.getElementById('reqList');
-  if(!requests.length){el.innerHTML=`<div class="sec"><p style="color:var(--gray);text-align:center;padding:40px">لا توجد طلبات</p></div>`;return;}
+  if(!requests.length){el.innerHTML=`<div class="sec"><p style="color:var(--gray);text-align:center;padding:40px">${L.noRequests}</p></div>`;return;}
   el.innerHTML=requests.map(r=>{
-    const cfg={Critical:['#B71C1C','حرج 🚨'],High:['#BF360C','عالي'],Medium:['#1565C0','متوسط'],Low:['#757575','منخفض']};
-    const [c,lbl]=cfg[r.urg]||['#757575','منخفض'];
+    const cfg={Critical:['#B71C1C',urgAr('Critical')],High:['#BF360C',urgAr('High')],Medium:['#1565C0',urgAr('Medium')],Low:['#757575',urgAr('Low')]};
+    const [c,lbl]=cfg[r.urg]||['#757575',r.urg];
     const sc=r.status==='Completed'?'bg':r.status==='Pending'?'bo':'bgr';
-    const sl=r.status==='Completed'?'مكتمل ✅':'قيد الانتظار ⏳';
+    const sl=r.status==='Completed'?L.statusCompleted:L.statusPending;
+    // زر المراسلة: لو الشخص الحالي مختلف عن طالب الدم
+    const canChat=currentUser&&currentUser.id!==r.uid&&r.uid;
     return `<div class="rcard" style="border-color:${c}">
       <div class="bbadge">${r.blood}</div>
       <div class="dinfo">
@@ -1840,7 +1904,8 @@ function renderReqList(){
         ${r.notes?`<p>📝 ${r.notes}</p>`:''}
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <button class="btn btn-blue btn-sm" onclick="goToMap(${r.lat},${r.lng})">🗺️</button>
+        <button class="btn btn-blue btn-sm" onclick="goToMap(${r.lat||0},${r.lng||0})">${L.viewMap||'🗺️'}</button>
+        ${canChat?`<button class="btn btn-outline btn-sm" onclick="startChat('${r.uid}')">${L.sendMsg||'💬'}</button>`:''}
         ${currentUser?.isAdmin&&r.status==='Pending'?`
           <button class="btn btn-green btn-sm" onclick="completeReq('${r.id}')">✅</button>`:''
         }
@@ -1872,7 +1937,14 @@ function renderLatest(){
   }).join('');
 }
 
-function urgAr(u){return{Low:'منخفض',Medium:'متوسط',High:'عالي',Critical:'حرج 🚨'}[u]||u}
+function urgAr(u){
+  const map={
+    ar:{Low:'منخفض',Medium:'متوسط',High:'عالي',Critical:'حرج 🚨'},
+    en:{Low:'Low',Medium:'Medium',High:'High',Critical:'Critical 🚨'},
+    ku:{Low:'نزم',Medium:'ناوەند',High:'بەرز',Critical:'کرسیار 🚨'}
+  };
+  return (map[curLang]||map.ar)[u]||u;
+}
 
 // ══════════════════════════════════════════════════════
 //  مراكز الدم
@@ -1894,45 +1966,51 @@ function renderCenters(){
 //  الصحة والتقييم
 // ══════════════════════════════════════════════════════
 function renderHealthCards(){
+  const L=LANGS[curLang]||LANGS.ar;
   const myRec=healthRecords.filter(r=>r.uid===currentUser?.id);
   const last=myRec[myRec.length-1];
   document.getElementById('healthCards').innerHTML=`
     <div class="hcard"><div class="hcard-ico">🫀</div>
       <div class="hcard-val">${last?`${last.sys}/${last.dia}`:'—'}</div>
-      <div class="hcard-lbl">ضغط الدم (mmHg)</div>
+      <div class="hcard-lbl">${L.bloodPressure}</div>
       ${last?`<div class="progress-bar"><div class="progress-fill" style="width:${Math.min(last.sys/200*100,100)}%"></div></div>`:''}
     </div>
     <div class="hcard"><div class="hcard-ico">💓</div>
       <div class="hcard-val" style="color:var(--red)">${last?last.hr:'—'}</div>
-      <div class="hcard-lbl">نبضات القلب (bpm)</div>
+      <div class="hcard-lbl">${L.heartRate}</div>
       ${last?`<div class="progress-bar"><div class="progress-fill" style="width:${Math.min(last.hr/200*100,100)}%;background:linear-gradient(90deg,var(--red),#EF9A9A)"></div></div>`:''}
     </div>
     <div class="hcard"><div class="hcard-ico">⚖️</div>
-      <div class="hcard-val" style="color:var(--blue)">${last?last.weight+' كغم':'—'}</div>
-      <div class="hcard-lbl">الوزن</div>
+      <div class="hcard-val" style="color:var(--blue)">${last?last.weight+(curLang==='en'?' kg':' كغم'):'—'}</div>
+      <div class="hcard-lbl">${L.weight}</div>
     </div>
     <div class="hcard"><div class="hcard-ico">🩸</div>
       <div class="hcard-val" style="color:var(--red)">${currentUser?.blood||'—'}</div>
-      <div class="hcard-lbl">فصيلة الدم</div>
+      <div class="hcard-lbl">${L.bloodTypeCard}</div>
     </div>
     <div class="hcard"><div class="hcard-ico">📅</div>
       <div class="hcard-val" style="color:var(--orange)">${requests.filter(r=>r.uid===currentUser?.id&&r.status==='Completed').length}</div>
-      <div class="hcard-lbl">مرات التبرع</div>
+      <div class="hcard-lbl">${L.donationCount}</div>
     </div>
     <div class="hcard"><div class="hcard-ico">✅</div>
       <div class="hcard-val" style="color:var(--green)">${myRec.length}</div>
-      <div class="hcard-lbl">قراءات مسجّلة</div>
+      <div class="hcard-lbl">${L.readingsCount}</div>
     </div>`;
 
   const hist=document.getElementById('healthHistory');
   if(myRec.length){
-    hist.innerHTML=`<div style="margin-top:16px"><h3 style="font-weight:800;margin-bottom:12px">📊 السجل الصحي</h3>`+
+    hist.innerHTML=`<div style="margin-top:16px"><h3 style="font-weight:800;margin-bottom:12px">${L.healthHistory}</h3>`+
       myRec.slice().reverse().map(r=>`
         <div style="background:#f9f9f9;border-radius:10px;padding:12px 16px;margin-bottom:8px;
           display:flex;justify-content:space-between;align-items:center">
           <span style="font-size:13px;color:var(--gray)">${fmtDate(r.date)}</span>
-          <span>💉 ضغط: <b>${r.sys}/${r.dia}</b> | نبض: <b>${r.hr}</b> | وزن: <b>${r.weight}</b></span>
+          <span>💉 ${curLang==='en'?'BP':'ضغط'}: <b>${r.sys}/${r.dia}</b> | ${curLang==='en'?'HR':'نبض'}: <b>${r.hr}</b> | ${curLang==='en'?'W':'وزن'}: <b>${r.weight}</b></span>
         </div>`).join('')+'</div>';
+  } else {
+    hist.innerHTML=`<div style="text-align:center;padding:30px;color:var(--gray);background:#f9f9f9;border-radius:12px;margin-top:16px">
+      <div style="font-size:40px;margin-bottom:10px">💊</div>
+      <p style="font-weight:600">${L.noReadings}</p>
+    </div>`;
   }
 }
 
@@ -2011,8 +2089,9 @@ function sendPub(){
 }
 
 function renderPubChat(){
+  const L=LANGS[curLang]||LANGS.ar;
   const el=document.getElementById('pubMsgs');
-  if(!pubMsgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">لا توجد رسائل – كن أول من يبدأ!</p>`;return;}
+  if(!pubMsgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">${L.noMsgs}</p>`;return;}
   el.innerHTML=pubMsgs.map(m=>{
     const me=currentUser&&m.sid===currentUser.id;
     return `<div class="msg ${me?'me':'other'}">
@@ -2024,29 +2103,46 @@ function renderPubChat(){
 }
 
 function startChat(uid){
-  if(!currentUser) return;
-  const other=users.find(u=>u.id===uid);if(!other) return;
-  const ids=[currentUser.id,other.id].sort();const rid=ids.join('_');
+  if(!currentUser){showAlert('يجب تسجيل الدخول','e');return;}
+  const other=users.find(u=>u.id===uid);
+  if(!other){showAlert('المستخدم غير موجود','e');return;}
+  if(uid===currentUser.id){showAlert('لا يمكنك مراسلة نفسك','e');return;}
+  const ids=[currentUser.id,other.id].sort();
+  const rid=ids.join('_');
   if(!rooms.find(r=>r.id===rid)){
     rooms.push({id:rid,mids:[currentUser.id,other.id],mnames:[currentUser.name,other.name],last:'',unread:0});
     pvtMsgs[rid]=[];
+    // حفظ الغرفة في Firebase
+    if(_db){
+      _db.collection('pvtRooms').doc(rid).set({
+        mids:[currentUser.id,other.id],
+        mnames:[currentUser.name,other.name],
+        createdAt:Date.now()
+      }).catch(()=>{});
+    }
   }
-  showPage('chat',document.querySelector('.tab[onclick*="chat"]'));
+  // تشغيل مستمع Firebase للغرفة
+  if(_db && !_unsubPvt[rid]) startPvtListener(rid);
+  saveData();
+  showPage('chat',null);
+  // تفعيل تبويب المحادثات الخاصة
   setTimeout(()=>{
-    document.querySelectorAll('.ctab')[1].click();
-    setTimeout(()=>openRoom(rid),100);
+    const pvtTab=document.querySelectorAll('.ctab')[1];
+    if(pvtTab) pvtTab.click();
+    setTimeout(()=>openRoom(rid),150);
   },100);
 }
 
 function renderRooms(){
+  const L=LANGS[curLang]||LANGS.ar;
   const el=document.getElementById('roomList');
-  if(!currentUser){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:30px">سجّل دخولك لعرض محادثاتك</p>`;return;}
-  const my=rooms.filter(r=>r.mids.includes(currentUser.id)||r.mids.includes('admin')&&currentUser.isAdmin);
+  if(!currentUser){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:30px">${L.loginTab}</p>`;return;}
+  const my=rooms.filter(r=>r.mids.includes(currentUser.id)||(r.mids.includes('admin')&&currentUser.isAdmin));
   if(!my.length){
     el.innerHTML=`<div style="text-align:center;padding:30px;color:var(--gray)">
       <div style="font-size:50px;margin-bottom:12px">💬</div>
-      <p>لا توجد محادثات بعد</p>
-      ${!currentUser.isAdmin?`<button class="btn btn-red" style="margin-top:10px" onclick="startAdminChat()">راسلي المديرة</button>`:''}
+      <p>${L.noChats}</p>
+      ${!currentUser.isAdmin?`<button class="btn btn-red" style="margin-top:10px" onclick="startAdminChat()">${L.msgAdmin}</button>`:''}
     </div>`;
     return;
   }
@@ -2131,9 +2227,10 @@ function sendPvt(){
 }
 
 function renderPvt(){
+  const L=LANGS[curLang]||LANGS.ar;
   const msgs=pvtMsgs[currentRoom]||[];
   const el=document.getElementById('pvtMsgs');
-  if(!msgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">ابدأ المحادثة!</p>`;return;}
+  if(!msgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">${L.startConvo}</p>`;return;}
   el.innerHTML=msgs.map(m=>{
     const me=m.sid===currentUser.id;
     const senderName=m.sid==='admin'?`${ADMIN.name}`:
@@ -2292,45 +2389,67 @@ function renderAllReqs(){
 //  الملف الشخصي
 // ══════════════════════════════════════════════════════
 function renderProfile(){
+  const L=LANGS[curLang]||LANGS.ar;
   const el=document.getElementById('profileContent');
-  if(!currentUser){el.innerHTML=`<div class="sec" style="text-align:center;padding:50px">يرجى تسجيل الدخول</div>`;return;}
+  if(!currentUser){el.innerHTML=`<div class="sec" style="text-align:center;padding:50px">${L.loginTab}</div>`;return;}
   const u=currentUser;
   const myReqs=requests.filter(r=>r.uid===u.id);
-  const myRat=ratings.filter(r=>r.uid===u.id);
+  const roleMap={
+    ar:{admin:'مديرة التطبيق',admin2:'مديرة التطبيق 2',user:'مستخدم مسجّل'},
+    en:{admin:'App Manager',admin2:'App Manager 2',user:'Registered User'},
+    ku:{admin:'بەڕێوەبەری ئەپ',admin2:'بەڕێوەبەری ئەپ ٢',user:'بەکارهێنەری تۆمارکراو'}
+  };
+  const rm=roleMap[curLang]||roleMap.ar;
+  const roleLabel=u.isAdmin?(u.isAssistant?rm.admin2:rm.admin):rm.user;
+  const infoLabels={
+    ar:{email:'البريد',phone:'الهاتف',blood:'فصيلة الدم',gov:'المحافظة',region:'المنطقة',requests:'الطلبات',req:'طلب',
+        personalInfo:'📋 المعلومات الشخصية',donationStatus:'❤️ حالة التبرع',
+        notDonor:'لم تسجّل كمتبرع بعد',regNow:'❤️ سجّل كمتبرع الآن',
+        status:'الحالة',change:'تغيير',editInfo:'✏️ تعديل معلوماتي',logout:'🚪 تسجيل الخروج'},
+    en:{email:'Email',phone:'Phone',blood:'Blood Type',gov:'Governorate',region:'Region',requests:'Requests',req:'req',
+        personalInfo:'📋 Personal Information',donationStatus:'❤️ Donation Status',
+        notDonor:"Not registered as donor yet",regNow:'❤️ Register as Donor Now',
+        status:'Status',change:'Change',editInfo:'✏️ Edit My Info',logout:'🚪 Logout'},
+    ku:{email:'ئیمەیل',phone:'تەلەفۆن',blood:'جۆری خوێن',gov:'پارێزگا',region:'ناوچە',requests:'داواکاریەکان',req:'داواکاری',
+        personalInfo:'📋 زانیاری کەسی',donationStatus:'❤️ دۆخی بەخشین',
+        notDonor:'هێشتا وەک بەخشەر تۆمار نەکراوی',regNow:'❤️ وەک بەخشەر تۆمارببە',
+        status:'دۆخ',change:'گۆڕین',editInfo:'✏️ دەستکاری زانیارییەکانم',logout:'🚪 دەرچوون'}
+  };
+  const IL=infoLabels[curLang]||infoLabels.ar;
   el.innerHTML=`
     <div style="background:linear-gradient(135deg,var(--redd),var(--red));border-radius:20px;padding:32px;color:#fff;margin-bottom:20px;text-align:center;position:relative">
-      ${u.isAdmin?'<div style="position:absolute;top:16px;left:16px;background:var(--gold);color:#333;border-radius:8px;padding:4px 12px;font-weight:800;font-size:13px">مديرة التطبيق</div>':''}
+      ${u.isAdmin?`<div style="position:absolute;top:16px;left:16px;background:var(--gold);color:#333;border-radius:8px;padding:4px 12px;font-weight:800;font-size:13px">${roleLabel}</div>`:''}
       <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;margin:0 auto 14px;border:3px solid rgba(255,255,255,.4)">${u.name[0]}</div>
       <h2 style="font-size:22px;font-weight:900">${u.name}</h2>
       <p style="opacity:.75">${u.gov} – ${u.region||''}</p>
     </div>
     <div class="sec">
-      <h2 style="margin-bottom:16px">📋 المعلومات الشخصية</h2>
+      <h2 style="margin-bottom:16px">${IL.personalInfo}</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        ${infoItem('📧','البريد',u.email)}
-        ${infoItem('📞','الهاتف',u.phone||'—')}
-        ${infoItem('🩸','فصيلة الدم','<span style="color:var(--red);font-size:18px;font-weight:900">'+u.blood+'</span>')}
-        ${infoItem('🏛️','المحافظة',u.gov)}
-        ${infoItem('📍','المنطقة',u.region||'—')}
-        ${infoItem('📊','الطلبات',myReqs.length+' طلب')}
+        ${infoItem('📧',IL.email,u.email)}
+        ${infoItem('📞',IL.phone,u.phone||'—')}
+        ${infoItem('🩸',IL.blood,'<span style="color:var(--red);font-size:18px;font-weight:900">'+u.blood+'</span>')}
+        ${infoItem('🏛️',IL.gov,u.gov)}
+        ${infoItem('📍',IL.region,u.region||'—')}
+        ${infoItem('📊',IL.requests,myReqs.length+' '+IL.req)}
       </div>
     </div>
     <div class="sec">
-      <h2 style="margin-bottom:16px">❤️ حالة التبرع</h2>
+      <h2 style="margin-bottom:16px">${IL.donationStatus}</h2>
       ${u.isDonor?`
         <div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:#f9f9f9;border-radius:10px">
-          <span style="font-weight:700">الحالة: <span style="color:${u.avail?'var(--green)':'var(--gray)'}">${u.avail?'✅ متاح للتبرع':'⏳ غير متاح'}</span></span>
+          <span style="font-weight:700">${IL.status}: <span style="color:${u.avail?'var(--green)':'var(--gray)'}">${u.avail?L.available:L.notAvailable}</span></span>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-            <span style="font-size:13px;color:var(--gray)">تغيير</span>
+            <span style="font-size:13px;color:var(--gray)">${IL.change}</span>
             <input type="checkbox" ${u.avail?'checked':''} onchange="toggleAvail(this.checked)"
               style="width:20px;height:20px;accent-color:var(--red)">
           </label>
         </div>`:`
-        <p style="color:var(--gray);margin-bottom:14px">لم تسجّل كمتبرع بعد</p>
-        <button class="btn btn-red btn-block" onclick="regDonor()">❤️ سجّل كمتبرع الآن</button>`}
+        <p style="color:var(--gray);margin-bottom:14px">${IL.notDonor}</p>
+        <button class="btn btn-red btn-block" onclick="regDonor()">${IL.regNow}</button>`}
     </div>
-    <button class="btn btn-red btn-block" onclick="openProfileEdit()" style="margin-top:8px">✏️ تعديل معلوماتي</button>
-    <button class="btn btn-outline btn-block" onclick="doLogout()" style="margin-top:8px">🚪 تسجيل الخروج</button>
+    <button class="btn btn-red btn-block" onclick="openProfileEdit()" style="margin-top:8px">${IL.editInfo}</button>
+    <button class="btn btn-outline btn-block" onclick="doLogout()" style="margin-top:8px">${IL.logout}</button>
   `;
 }
 
@@ -2580,6 +2699,71 @@ const LANGS={
     noAccount:'ليس لديك حساب؟',signupNow:'سجّل الآن',
     nameLbl:'👤 الاسم',phoneLbl:'📞 الهاتف',
     createBtn:'إنشاء الحساب ←',haveAccount:'لديك حساب؟',loginNow:'سجّل دخولك',
+    // صفحة التبرع
+    donateTitle:'❤️ التبرع بالدم',donateSubtitle:'فصيلة دمك',donateAvail:'متاح للتبرع',donateNotAvail:'غير متاح حالياً',
+    toggleAvail:'تغيير حالة التوفر',
+    // صفحة الصحة
+    bloodPressure:'ضغط الدم (mmHg)',heartRate:'نبضات القلب (bpm)',weight:'الوزن',
+    bloodTypeCard:'فصيلة الدم',donationCount:'مرات التبرع',readingsCount:'قراءات مسجّلة',
+    noReadings:'لا توجد قراءات صحية – أضف قراءتك الأولى',healthHistory:'📊 السجل الصحي',
+    // نافذة تسجيل قراءة
+    addHealthReading:'💊 تسجيل قراءة صحية',systolic:'الضغط الانقباضي',diastolic:'الضغط الانبساطي',
+    heartRateLbl:'معدل النبض',weightLbl:'الوزن (كغم)',saveBtn:'حفظ القراءة',
+    // طلب الدم
+    requestTitle:'🆘 طلب دم',reqBloodType:'فصيلة الدم',reqHosp:'المستشفى',reqGov:'المحافظة',
+    reqRegion:'المنطقة',reqUrgency:'درجة الإلحاح',reqNotes:'ملاحظات إضافية',
+    reqSendBtn:'إرسال الطلب',
+    // إشعارات
+    notifications:'🔔 الإشعارات',noNotifications:'لا توجد إشعارات',
+    // تقييم
+    ratingTitle:'⭐ تقييم التبرعات',addRatingBtn:'+ أضف تقييم',
+    // خريطة
+    mapTitle:'🗺️ خريطة المتبرعين',
+    // عن التطبيق
+    aboutTitle:'ℹ️ عن التطبيق',
+    // لوحة الإدارة
+    adminTitle:'⚙️ لوحة الإدارة',pendingUsers:'المستخدمون المنتظرون',allUsers:'جميع المستخدمين',
+    allRequests:'جميع الطلبات',approve:'موافقة',reject:'رفض',
+    statusPending:'⏳ انتظار',statusCompleted:'✅ مكتمل',statusCancelled:'❌ ملغي',
+    availYes:'✅ متاح للتبرع',availNo:'⏳ غير متاح',
+    donorAvail:'✅ متاح',noResults:'😔 لا يوجد متبرعون متاحون بهذه المعايير',
+    latestRequests:'🆕 آخر الطلبات',noRequests:'لا توجد طلبات',
+    sendMsg:'💬 رسالة',viewMap:'🗺️ الخريطة',
+    startConvo:'ابدأ المحادثة!',noChats:'لا توجد محادثات بعد',msgAdmin:'راسلي المديرة',
+    noNotifs:'لا توجد إشعارات',newMsg:'رسالة جديدة من',
+    // نوافذ
+    reqModalTitle:'🆘 طلب دم جديد',reqGov:'المحافظة',reqRegion:'المنطقة',
+    reqHosp:'المستشفى',reqHospPh:'اسم المستشفى أو المركز الصحي',
+    reqUrgency:'درجة الاستعجال',reqPickLoc:'تحديد الموقع على الخريطة',
+    reqPickBtn:'اختر على الخريطة',reqPickHint:'اضغط على الخريطة لتحديد الموقع',
+    reqNotes:'ملاحظات',reqNotesPh:'أضف أي معلومات...',reqSendBtn:'إرسال الطلب 🚀',
+    urgLow:'منخفض',urgMedium:'متوسط ✓',urgMedium2:'متوسط',urgHigh:'عالي',urgCritical:'حرج 🚨',urgCritical2:'حرج 🚨',
+    myLoc:'موقعي',confirm:'تأكيد',allRegions:'اختر المحافظة',chooseGov:'اختر المحافظة',chooseGovFirst:'اختر المحافظة أولاً',
+    rateTitle:'⭐ تقييم التبرع',rateSubtitle:'كيف كانت تجربة التبرع؟ تقييمك يساعد المجتمع',
+    rateComment:'تعليق (اختياري)',rateCommentPh:'اكتب تعليقك...',rateSendBtn:'إرسال التقييم ⭐',
+    healthModalTitle:'💊 تسجيل قراءة صحية',healthSys:'ضغط الدم (sys)',healthDia:'ضغط الدم (dia)',
+    healthHR:'نبضات القلب',healthWeight:'الوزن (كغم)',healthSaveBtn:'حفظ القراءة ✅',notesAnyPh:'أي ملاحظات...',
+    editUserTitle:'✏️ تعديل بيانات المستخدم',statusLbl:'الحالة',approvedOpt:'✅ موافق عليه',pendingOpt:'⏳ قيد المراجعة',saveEdits:'💾 حفظ التعديلات',
+    editReqTitle:'✏️ تعديل طلب الدم',statusPending2:'⏳ انتظار',statusCompleted2:'✅ مكتمل',
+    donorRegTitle:'🩸 تسجيل كمتبرع بالدم',
+    donorRegNote:'💡 يرجى ملء جميع المعلومات بدقة – ستُعرض للمديرة أفنان طه عفين للمراجعة والموافقة',
+    drNameLbl:'👤 الاسم الكامل',drNamePh:'الاسم الثلاثي',drAgeLbl:'🎂 العمر',drAgePh:'مثال: 25',
+    drWeightLbl:'⚖️ الوزن (كغم)',drWeightPh:'مثال: 70',drPhoneLbl:'📞 رقم الهاتف للتواصل',
+    drDiseaseLbl:'🏥 هل تعاني من أي أمراض مزمنة؟',drDiseaseNo:'لا، أنا بصحة جيدة',drDiseaseYes:'نعم',
+    drDiseasePh:'اذكر نوع المرض أو الأدوية التي تتناولها...',
+    drLastDonateLbl:'💉 آخر مرة تبرعت بالدم',drNever:'لم أتبرع من قبل',
+    drLess3m:'أقل من 3 أشهر (غير مؤهل حالياً)',dr3to6m:'منذ 3 إلى 6 أشهر',
+    drMore6m:'أكثر من 6 أشهر',drMoreYear:'أكثر من سنة',
+    drNotesLbl:'📝 ملاحظات إضافية (اختياري)',drNotesPh:'أي معلومات تودّ إضافتها...',
+    donorRegSubmit:'🩸 إرسال طلب التسجيل كمتبرع',
+    contactAdminTitle:'💬 إرسال رسالة للمديرة',adminRole:'مديرة التطبيق – الأنبار، الرمادي الكورنيش',
+    msgSubject:'موضوع الرسالة',msgText:'نص الرسالة',msgTextPh:'اكتب رسالتك للمديرة...',sendBtn:'إرسال ➤',
+    subjectGeneral:'استفسار عام',subjectTech:'مشكلة تقنية',subjectHelp:'طلب مساعدة',subjectSuggest:'اقتراح',subjectComplain:'شكوى',
+    fullNamePh:'الاسم الكامل',
+    langModalTitle:'🌐 اختيار اللغة',aboutModalTitle:'ℹ️ عن التطبيق',
+    aboutSub:'تطبيق التبرع بالدم في العراق',aboutUni:'🎓 جامعة الأنبار',
+    aboutCollege:'كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات – 2026',
+    aboutStudents:'👩‍💻 إعداد الطالبات',adminRole:'مديرة التطبيق',admin2Role:'مديرة التطبيق 2',
   },
   en:{
     dir:'ltr',code:'en',label:'English 🇬🇧',
@@ -2604,6 +2788,62 @@ const LANGS={
     noAccount:"Don't have an account?",signupNow:'Sign Up',
     nameLbl:'👤 Name',phoneLbl:'📞 Phone',
     createBtn:'Create Account ←',haveAccount:'Have an account?',loginNow:'Login',
+    donateTitle:'❤️ Donate Blood',donateSubtitle:'Your Blood Type',donateAvail:'Available to Donate',donateNotAvail:'Not Available',
+    toggleAvail:'Toggle Availability',
+    bloodPressure:'Blood Pressure (mmHg)',heartRate:'Heart Rate (bpm)',weight:'Weight',
+    bloodTypeCard:'Blood Type',donationCount:'Donations',readingsCount:'Readings Saved',
+    noReadings:'No health readings yet – Add your first reading',healthHistory:'📊 Health History',
+    addHealthReading:'💊 Add Health Reading',systolic:'Systolic',diastolic:'Diastolic',
+    heartRateLbl:'Heart Rate',weightLbl:'Weight (kg)',saveBtn:'Save Reading',
+    requestTitle:'🆘 Blood Request',reqBloodType:'Blood Type',reqHosp:'Hospital',reqGov:'Governorate',
+    reqRegion:'Region',reqUrgency:'Urgency',reqNotes:'Additional Notes',
+    reqSendBtn:'Send Request',
+    notifications:'🔔 Notifications',noNotifications:'No notifications',
+    ratingTitle:'⭐ Donation Ratings',addRatingBtn:'+ Add Rating',
+    mapTitle:'🗺️ Donors Map',
+    aboutTitle:'ℹ️ About',
+    adminTitle:'⚙️ Admin Panel',pendingUsers:'Pending Users',allUsers:'All Users',
+    allRequests:'All Requests',approve:'Approve',reject:'Reject',
+    statusPending:'⏳ Pending',statusCompleted:'✅ Completed',statusCancelled:'❌ Cancelled',
+    availYes:'✅ Available to Donate',availNo:'⏳ Not Available',
+    donorAvail:'✅ Available',noResults:'😔 No available donors matching these criteria',
+    latestRequests:'🆕 Latest Requests',noRequests:'No requests found',
+    sendMsg:'💬 Message',viewMap:'🗺️ Map',
+    startConvo:'Start the conversation!',noChats:'No chats yet',msgAdmin:'Message Admin',
+    noNotifs:'No notifications',newMsg:'New message from',
+    // modals
+    reqModalTitle:'🆘 New Blood Request',reqGov:'Governorate',reqRegion:'Region',
+    reqHosp:'Hospital',reqHospPh:'Hospital or health center name',
+    reqUrgency:'Urgency Level',reqPickLoc:'Pin Location on Map',
+    reqPickBtn:'Choose on Map',reqPickHint:'Tap the map to set location',
+    reqNotes:'Notes',reqNotesPh:'Add any information...',reqSendBtn:'Send Request 🚀',
+    urgLow:'Low',urgMedium:'Medium ✓',urgMedium2:'Medium',urgHigh:'High',urgCritical:'Critical 🚨',urgCritical2:'Critical 🚨',
+    myLoc:'My Location',confirm:'Confirm',allRegions:'Choose Governorate',chooseGov:'Choose Governorate',chooseGovFirst:'Choose Governorate First',
+    rateTitle:'⭐ Rate Donation',rateSubtitle:'How was your donation experience? Your rating helps the community',
+    rateComment:'Comment (optional)',rateCommentPh:'Write your comment...',rateSendBtn:'Submit Rating ⭐',
+    healthModalTitle:'💊 Add Health Reading',healthSys:'Blood Pressure (sys)',healthDia:'Blood Pressure (dia)',
+    healthHR:'Heart Rate',healthWeight:'Weight (kg)',healthSaveBtn:'Save Reading ✅',notesAnyPh:'Any notes...',
+    editUserTitle:'✏️ Edit User Data',statusLbl:'Status',approvedOpt:'✅ Approved',pendingOpt:'⏳ Pending Review',saveEdits:'💾 Save Changes',
+    editReqTitle:'✏️ Edit Blood Request',statusPending2:'⏳ Pending',statusCompleted2:'✅ Completed',
+    donorRegTitle:'🩸 Register as Blood Donor',
+    donorRegNote:'💡 Please fill all information accurately – it will be reviewed by the admin Afnan Taha Afeen',
+    drNameLbl:'👤 Full Name',drNamePh:'Full three-part name',drAgeLbl:'🎂 Age',drAgePh:'e.g. 25',
+    drWeightLbl:'⚖️ Weight (kg)',drWeightPh:'e.g. 70',drPhoneLbl:'📞 Contact Phone Number',
+    drDiseaseLbl:'🏥 Do you have any chronic diseases?',drDiseaseNo:"No, I'm in good health",drDiseaseYes:'Yes',
+    drDiseasePh:'Mention the disease or medications you take...',
+    drLastDonateLbl:'💉 Last time you donated blood',drNever:'Never donated before',
+    drLess3m:'Less than 3 months (currently ineligible)',dr3to6m:'3 to 6 months ago',
+    drMore6m:'More than 6 months ago',drMoreYear:'More than a year ago',
+    drNotesLbl:'📝 Additional Notes (optional)',drNotesPh:'Any information you want to add...',
+    donorRegSubmit:'🩸 Submit Donor Registration',
+    contactAdminTitle:'💬 Send Message to Admin',adminRole:'App Manager – Anbar, Ramadi Corniche',
+    msgSubject:'Message Subject',msgText:'Message',msgTextPh:'Write your message to the admin...',sendBtn:'Send ➤',
+    subjectGeneral:'General Inquiry',subjectTech:'Technical Issue',subjectHelp:'Request Help',subjectSuggest:'Suggestion',subjectComplain:'Complaint',
+    fullNamePh:'Full Name',
+    langModalTitle:'🌐 Choose Language',aboutModalTitle:'ℹ️ About',
+    aboutSub:'Blood Donation App in Iraq',aboutUni:'🎓 University of Anbar',
+    aboutCollege:'College of Computer Science and IT<br>Information Systems Dept – 2026',
+    aboutStudents:'👩‍💻 Developed by Students',adminRole:'App Manager',admin2Role:'App Manager 2',
   },
   ku:{
     dir:'rtl',code:'ku',label:'کوردی 🏔️',
@@ -2628,9 +2868,84 @@ const LANGS={
     noAccount:'هەژمارت نییە؟',signupNow:'تۆمارببە',
     nameLbl:'👤 ناو',phoneLbl:'📞 تەلەفۆن',
     createBtn:'دروستکردنی هەژمار ←',haveAccount:'هەژمارت هەیە؟',loginNow:'بچۆ ژوورەوە',
+    donateTitle:'❤️ بەخشینی خوێن',donateSubtitle:'جۆری خوێنەکەت',donateAvail:'ئامادەی بەخشین',donateNotAvail:'ئامادە نییە',
+    toggleAvail:'گۆڕینی دۆخی ئامادەبوون',
+    bloodPressure:'گرنجی خوێن (mmHg)',heartRate:'لێدانی دل (bpm)',weight:'کێش',
+    bloodTypeCard:'جۆری خوێن',donationCount:'جارەکانی بەخشین',readingsCount:'خوێندنەوەی تۆمارکراو',
+    noReadings:'هیچ خوێندنەوەیەکی تەندرووستی نییە – یەکەمەکەت زیادبکە',healthHistory:'📊 مێژووی تەندرووستی',
+    addHealthReading:'💊 تۆمارکردنی خوێندنەوەی تەندرووستی',systolic:'گرنجی سیستۆلیک',diastolic:'گرنجی دیاستۆلیک',
+    heartRateLbl:'ڕێژەی لێدانی دل',weightLbl:'کێش (کیلۆگرام)',saveBtn:'پاشەکەوت بکە',
+    requestTitle:'🆘 داوای خوێن',reqBloodType:'جۆری خوێن',reqHosp:'نەخۆشخانە',reqGov:'پارێزگا',
+    reqRegion:'ناوچە',reqUrgency:'ئازادەبوون',reqNotes:'تێبینی زیاتر',
+    reqSendBtn:'ناردنی داواکاری',
+    notifications:'🔔 ئاگادارکردنەوەکان',noNotifications:'هیچ ئاگادارکردنەوەیەک نییە',
+    ratingTitle:'⭐ نرخاندنی بەخشینەکان',addRatingBtn:'+ نرخاندن زیادبکە',
+    mapTitle:'🗺️ نەخشەی بەخشەران',
+    aboutTitle:'ℹ️ دەربارەی',
+    adminTitle:'⚙️ پانێلی بەڕێوەبەری',pendingUsers:'بەکارهێنەرانی چاوەڕوانکراو',allUsers:'هەموو بەکارهێنەران',
+    allRequests:'هەموو داواکاریەکان',approve:'پەسەندکردن',reject:'ڕەتکردنەوە',
+    statusPending:'⏳ چاوەڕوانکردن',statusCompleted:'✅ تەواوبوو',statusCancelled:'❌ هەڵوەشاندەوە',
+    availYes:'✅ ئامادەی بەخشین',availNo:'⏳ ئامادە نییە',
+    donorAvail:'✅ ئامادە',noResults:'😔 هیچ بەخشەرێکی ئامادە بە ئەم پێوانانە نەدۆزرایەوە',
+    latestRequests:'🆕 دوایین داواکاریەکان',noRequests:'هیچ داواکاریەک نەدۆزرایەوە',
+    sendMsg:'💬 پەیام',viewMap:'🗺️ نەخشە',
+    startConvo:'دەستی بکە بە گفتوگۆکە!',noChats:'هیچ چاتێک نییە',msgAdmin:'پەیوەندی بە بەڕێوەبەر',
+    noNotifs:'هیچ ئاگادارکردنەوەیەک نییە',newMsg:'پەیامێکی نوێ لە',
+    // نوافذ
+    reqModalTitle:'🆘 داواکاری خوێنی نوێ',reqGov:'پارێزگا',reqRegion:'ناوچە',
+    reqHosp:'نەخۆشخانە',reqHospPh:'ناوی نەخۆشخانە یان مەرکەزی تەندرووستی',
+    reqUrgency:'ئازادەبوون',reqPickLoc:'دیاریکردنی شوێن لە نەخشەدا',
+    reqPickBtn:'لە نەخشەدا هەڵبژێرە',reqPickHint:'لە نەخشەدا دابگرە بۆ دیاریکردنی شوێن',
+    reqNotes:'تێبینی',reqNotesPh:'زانیاری زیاتر زیادبکە...',reqSendBtn:'ناردنی داواکاری 🚀',
+    urgLow:'نزم',urgMedium:'ناوەند ✓',urgMedium2:'ناوەند',urgHigh:'بەرز',urgCritical:'کرسیار 🚨',urgCritical2:'کرسیار 🚨',
+    myLoc:'شوێنەکەم',confirm:'دڵنیاکردنەوە',allRegions:'پارێزگا هەڵبژێرە',chooseGov:'پارێزگا هەڵبژێرە',chooseGovFirst:'یەکەم پارێزگا هەڵبژێرە',
+    rateTitle:'⭐ نرخاندنی بەخشین',rateSubtitle:'ئەزموونی بەخشینت چۆن بوو؟ نرخاندنەکەت کۆمەڵگەکە یارمەتی دەدات',
+    rateComment:'لێدوان (ئارەزووییە)',rateCommentPh:'لێدوانەکەت بنووسە...',rateSendBtn:'ناردنی نرخاندن ⭐',
+    healthModalTitle:'💊 تۆمارکردنی خوێندنەوەی تەندرووستی',healthSys:'گرنجی خوێن (sys)',healthDia:'گرنجی خوێن (dia)',
+    healthHR:'لێدانی دل',healthWeight:'کێش (کیلۆگرام)',healthSaveBtn:'پاشەکەوتکردن ✅',notesAnyPh:'هەر تێبینییەک...',
+    editUserTitle:'✏️ دەستکاریکردنی داتای بەکارهێنەر',statusLbl:'دۆخ',approvedOpt:'✅ پەسەندکراو',pendingOpt:'⏳ چاوەڕوانی پشکنین',saveEdits:'💾 پاشەکەوتکردنی گۆڕانکاریەکان',
+    editReqTitle:'✏️ دەستکاریکردنی داواکاری خوێن',statusPending2:'⏳ چاوەڕوانکردن',statusCompleted2:'✅ تەواوبوو',
+    donorRegTitle:'🩸 تۆمارکردن وەک بەخشەری خوێن',
+    donorRegNote:'💡 تکایە هەموو زانیارییەکان بە دقەت پڕبکەوە – بۆ بەڕێوەبەر أفنان طه عفين دەنێردرێت بۆ پشکنین و پەسەندکردن',
+    drNameLbl:'👤 ناوی تەواو',drNamePh:'ناوی سێ بەشی',drAgeLbl:'🎂 تەمەن',drAgePh:'نموونە: 25',
+    drWeightLbl:'⚖️ کێش (کیلۆگرام)',drWeightPh:'نموونە: 70',drPhoneLbl:'📞 ژمارەی تەلەفۆن بۆ پەیوەندی',
+    drDiseaseLbl:'🏥 نەخۆشی درێژخایەنت هەیە؟',drDiseaseNo:'نەخێر، تەندروستم',drDiseaseYes:'بەڵێ',
+    drDiseasePh:'جۆری نەخۆشی یان دەرمانەکانی کە وەردەگریت باسبکە...',
+    drLastDonateLbl:'💉 کاتی دوایین جارێ خوێنت بەخشی',drNever:'هەرگیز نەبەخشیوم',
+    drLess3m:'کەمتر لە 3 مانگ (ئێستا نالایقی)',dr3to6m:'لە 3 تا 6 مانگ پێش ئێستا',
+    drMore6m:'زیاتر لە 6 مانگ پێش ئێستا',drMoreYear:'زیاتر لە ساڵێک پێش ئێستا',
+    drNotesLbl:'📝 تێبینی زیاتر (ئارەزووییە)',drNotesPh:'هەر زانیارییەک کە دەتەوێت زیادبکەی...',
+    donorRegSubmit:'🩸 ناردنی داواکاری تۆمارکردن وەک بەخشەر',
+    contactAdminTitle:'💬 ناردنی پەیام بۆ بەڕێوەبەر',adminRole:'بەڕێوەبەری ئەپ – ئەنبار، ڕەمادی کۆرنیش',
+    msgSubject:'بابەتی پەیام',msgText:'دەقی پەیام',msgTextPh:'پەیامەکەت بۆ بەڕێوەبەر بنووسە...',sendBtn:'ناردن ➤',
+    subjectGeneral:'پرسیاری گشتی',subjectTech:'کێشەی تەکنیکی',subjectHelp:'داواکاری یارمەتی',subjectSuggest:'پێشنیار',subjectComplain:'گلەیی',
+    fullNamePh:'ناوی تەواو',
+    langModalTitle:'🌐 هەڵبژاردنی زمان',aboutModalTitle:'ℹ️ دەربارەی',
+    aboutSub:'ئەپی بەخشینی خوێن لە عێراق',aboutUni:'🎓 زانکۆی ئەنبار',
+    aboutCollege:'کۆلێژی زانستی کۆمپیوتەر و IT<br>بەشی سیستەمی زانیاری – 2026',
+    aboutStudents:'👩‍💻 ئامادەکردنی قوتابیان',adminRole:'بەڕێوەبەری ئەپ',admin2Role:'بەڕێوەبەری ئەپ ٢',
   }
 };
 let curLang=localStorage.getItem('ll_lang')||'ar';
+
+// ══ ترجمة كل عناصر data-i18n في الصفحة ══
+function translateDOM(L){
+  // ترجمة النصوص
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(L[key]!==undefined) el.textContent=L[key];
+  });
+  // ترجمة placeholders
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-ph');
+    if(L[key]!==undefined) el.placeholder=L[key];
+  });
+  // اتجاه النوافذ
+  document.querySelectorAll('.modal,.mbox,.mbody,.fg,label').forEach(el=>{
+    el.style.direction=L.dir;
+    el.style.textAlign=L.dir==='rtl'?'right':'left';
+  });
+}
 
 function applyLang(code){
   const L=LANGS[code]||LANGS.ar;
@@ -2638,6 +2953,9 @@ function applyLang(code){
   localStorage.setItem('ll_lang',code);
   document.documentElement.dir=L.dir;
   document.documentElement.lang=code;
+
+  // ترجمة كل data-i18n في الصفحة دفعة واحدة
+  translateDOM(L);
 
   // شريط جانبي
   const sbMap={
@@ -2701,6 +3019,53 @@ function applyLang(code){
   if(enterBtns[0])enterBtns[0].textContent=L.enterBtn;
   if(enterBtns[1])enterBtns[1].textContent=L.createBtn;
   ['lEmail','rEmail'].forEach(id=>{const el=document.getElementById(id);if(el)el.previousElementSibling&&(el.previousElementSibling.textContent=L.emailLbl);});
+
+  // صفحة الصحة
+  const healthTitle=document.querySelector('#page-health .sec-title');if(healthTitle)healthTitle.textContent=L.myHealth;
+  const addReadingBtn=document.querySelector('#page-health .btn-green');if(addReadingBtn)addReadingBtn.textContent=L.addReading;
+  const ratingTitle=document.querySelector('#ratingSection')?.previousElementSibling?.querySelector('.sec-title');
+  // لا بد نعيد رسم بطاقات الصحة بعد تغيير اللغة
+  if(typeof renderHealthCards === 'function' && document.getElementById('healthCards')) renderHealthCards();
+
+  // نافذة تسجيل القراءة الصحية
+  const mHealthTitle=document.querySelector('#mHealth .mhead h3');if(mHealthTitle)mHealthTitle.textContent=L.addHealthReading;
+  const hSysLbl=document.querySelector('label[for="hSys"]');if(hSysLbl)hSysLbl.textContent=L.systolic;
+  const hDiaLbl=document.querySelector('label[for="hDia"]');if(hDiaLbl)hDiaLbl.textContent=L.diastolic;
+  const hHRLbl=document.querySelector('label[for="hHR"]');if(hHRLbl)hHRLbl.textContent=L.heartRateLbl;
+  const hWeightLbl=document.querySelector('label[for="hWeight"]');if(hWeightLbl)hWeightLbl.textContent=L.weightLbl;
+
+  // صفحة لوحة الإدارة
+  const adminTitle=document.querySelector('#page-admin .sec-title');if(adminTitle)adminTitle.textContent=L.adminTitle;
+
+  // صفحة الخريطة
+  const mapTitle=document.querySelector('#page-map .sec-title');if(mapTitle)mapTitle.textContent=L.mapTitle;
+
+  // لوحة الإشعارات
+  const notifHead=document.querySelector('.notif-head');
+  if(notifHead){const closeBtn=notifHead.querySelector('button');notifHead.childNodes[0].textContent=L.notifications+' ';if(closeBtn)notifHead.appendChild(closeBtn);}
+  const notifEmpty=document.querySelector('.notif-empty');if(notifEmpty)notifEmpty.textContent=L.noNotifications;
+
+  // اتجاه النافذة كلها عند تغيير اللغة
+  document.querySelectorAll('.modal').forEach(m=>{m.style.direction=L.dir;});
+  document.querySelectorAll('.sec,.page').forEach(el=>{el.style.direction=L.dir;});
+  document.querySelector('body').style.direction=L.dir;
+
+  // ترجمة لقب المستخدم في الشريط الجانبي
+  const sbRlEl=document.getElementById('sbRl');
+  if(sbRlEl && currentUser){
+    const roleMap={
+      ar:{admin:'مديرة التطبيق',admin2:'مديرة التطبيق 2',user:'مستخدم مسجّل'},
+      en:{admin:'App Manager',admin2:'App Manager 2',user:'Registered User'},
+      ku:{admin:'بەڕێوەبەری ئەپ',admin2:'بەڕێوەبەری ئەپ ٢',user:'بەکارهێنەری تۆمارکراو'}
+    };
+    const rm=roleMap[code]||roleMap.ar;
+    sbRlEl.textContent=currentUser.isAdmin?(currentUser.isAssistant?rm.admin2:rm.admin):rm.user;
+  }
+
+  // إعادة رسم الصفحات الديناميكية بعد تغيير اللغة
+  if(typeof renderReqList==='function') renderReqList();
+  if(typeof renderLatest==='function') renderLatest();
+  if(typeof renderHealthCards==='function' && document.getElementById('healthCards')) renderHealthCards();
 }
 
 function openLangM(){
@@ -3083,13 +3448,116 @@ function regDonorDonate(){
   showBadge('❤️','مبروك! أنت الآن متبرع','شكراً لك – تبرعك قد ينقذ حياة إنسان',3000);
 }
 
+function renderDonatePage(){
+  const L=LANGS[curLang]||LANGS.ar;
+  const DT={
+    ar:{
+      heroTitle:'❤️ تبرع بالدم – أنقذ حياة',
+      heroSub:'كل تبرع يمكن أن ينقذ حياة إنسان. كن البطل الذي ينتظره شخص ما اليوم!',
+      regBtn:'🩸 سجّل كمتبرع الآن', reqBtn:'🆘 اطلب دماً',
+      whoTitle:'من يمكنه التبرع؟',
+      whoCriteria:'عمرك بين 18-65 سنة<br>وزنك أكثر من 50 كغم<br>لا تعاني من أمراض مزمنة<br>لم تتبرع منذ 3 أشهر',
+      benefitsTitle:'فوائد التبرع',
+      benefits:'تحسين صحة القلب<br>حرق السعرات الحرارية<br>تجديد خلايا الدم<br>شعور بالسعادة والرضا',
+      stepsTitle:'خطوات التبرع',
+      steps:'1. سجّل في التطبيق<br>2. اختر مركز الدم<br>3. أجرِ الفحص الأولي<br>4. تبرع واستلم شهادتك',
+      topTitle:'متبرعو الشهر',
+      centersTitle:'🏥 مراكز التبرع في الأنبار',
+      statusTitle:'❤️ حالتك كمتبرع'
+    },
+    en:{
+      heroTitle:'❤️ Donate Blood – Save Lives',
+      heroSub:'Every donation can save a life. Be the hero someone is waiting for today!',
+      regBtn:'🩸 Register as Donor', reqBtn:'🆘 Request Blood',
+      whoTitle:'Who Can Donate?',
+      whoCriteria:'Age between 18-65 years<br>Weight more than 50 kg<br>No chronic diseases<br>Not donated in last 3 months',
+      benefitsTitle:'Benefits of Donation',
+      benefits:'Improved heart health<br>Burns calories<br>Renews blood cells<br>Sense of happiness and fulfillment',
+      stepsTitle:'Donation Steps',
+      steps:'1. Register in the app<br>2. Choose a blood center<br>3. Complete initial checkup<br>4. Donate and receive your certificate',
+      topTitle:'Top Donors This Month',
+      centersTitle:'🏥 Donation Centers in Anbar',
+      statusTitle:'❤️ Your Donor Status'
+    },
+    ku:{
+      heroTitle:'❤️ خوێن ببەخشە – ژیانێک ڕێزبکە',
+      heroSub:'هەر بەخشینێک دەتوانێت ژیانێک ڕێزبکات. ئەمڕۆ بە پاڵەوانی بە.',
+      regBtn:'🩸 وەک بەخشەر تۆمارببە', reqBtn:'🆘 داوای خوێن بکە',
+      whoTitle:'کێ دەتوانێت بیببەخشێت؟',
+      whoCriteria:'تەمەن نێوان 18-65 ساڵ<br>کێش زیاتر لە 50 کیلۆ<br>نەخۆشی درێژخایەن نەبێت<br>لە 3 مانگی رابردوودا نەبەخشیبێت',
+      benefitsTitle:'سوودەکانی بەخشین',
+      benefits:'باشتربوونی تەندرووستی دل<br>سووتاندنی کالۆری<br>نوێبوونەوەی خانەکانی خوێن<br>هەستی بەخشندەیی و دڵخۆشی',
+      stepsTitle:'هەنگاوەکانی بەخشین',
+      steps:'1. تۆمار بکە لە ئەپەکەدا<br>2. مەرکەزێکی خوێن هەڵبژێرە<br>3. پشکنینی سەرەتایی بکە<br>4. ببەخشە و بڕوانامەکەت وەربگرە',
+      topTitle:'باشترین بەخشەرانی مانگ',
+      centersTitle:'🏥 مەرکەزەکانی بەخشین لە ئەنبار',
+      statusTitle:'❤️ دۆخی بەخشینی تۆ'
+    }
+  };
+  const DL=DT[curLang]||DT.ar;
+  const el=document.getElementById('donatePageContent');
+  if(!el) return;
+  // أفضل متبرع الشهر من البيانات الحقيقية
+  const topDonors=users.filter(u=>u.isDonor&&u.approved&&!u.isAdmin).slice(0,3);
+  const topHtml=topDonors.length
+    ? topDonors.map(u=>`<p style="font-size:13px;color:var(--gray);margin:4px 0">❤️ ${u.name} – ${u.blood}</p>`).join('')
+    : `<p style="font-size:13px;color:var(--gray)">${curLang==='en'?'No donors yet':'لا يوجد متبرعون بعد'}</p>`;
+  el.innerHTML=`
+    <div class="hero" style="background:linear-gradient(135deg,#7B1FA2,#C62828,#E53935);margin-bottom:20px">
+      <div class="hero-content">
+        <h1>${DL.heroTitle}</h1>
+        <p>${DL.heroSub}</p>
+        <div class="hero-btns">
+          <button class="btn" style="background:#fff;color:#C62828" onclick="openModal('mDonorReg')">${DL.regBtn}</button>
+          <button class="btn" style="background:rgba(255,255,255,.2);color:#fff;border:2px solid rgba(255,255,255,.5)" onclick="openModal('mRequest')">${DL.reqBtn}</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:24px">
+      <div class="sec" style="text-align:center;border-top:4px solid #C62828">
+        <div style="font-size:48px;margin-bottom:10px">🩸</div>
+        <h3 style="margin-bottom:8px;color:#C62828">${DL.whoTitle}</h3>
+        <p style="color:var(--gray);font-size:13px;line-height:1.8">${DL.whoCriteria}</p>
+      </div>
+      <div class="sec" style="text-align:center;border-top:4px solid var(--green)">
+        <div style="font-size:48px;margin-bottom:10px">💪</div>
+        <h3 style="margin-bottom:8px;color:var(--green)">${DL.benefitsTitle}</h3>
+        <p style="color:var(--gray);font-size:13px;line-height:1.8">${DL.benefits}</p>
+      </div>
+      <div class="sec" style="text-align:center;border-top:4px solid var(--blue)">
+        <div style="font-size:48px;margin-bottom:10px">📋</div>
+        <h3 style="margin-bottom:8px;color:var(--blue)">${DL.stepsTitle}</h3>
+        <p style="color:var(--gray);font-size:13px;line-height:1.8">${DL.steps}</p>
+      </div>
+      <div class="sec" style="text-align:center;border-top:4px solid var(--gold)">
+        <div style="font-size:48px;margin-bottom:10px">🏆</div>
+        <h3 style="margin-bottom:8px;color:var(--gold)">${DL.topTitle}</h3>
+        ${topHtml}
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-head"><h2>${DL.centersTitle}</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+        <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مصرف دم الأنبار – الرمادي</h4><p>الرمادي – شارع الجمهورية</p><p>📞 07802345678</p></div></div>
+        <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مصرف دم الفلوجة</h4><p>الفلوجة – المركز الصحي العام</p><p>📞 07803456789</p></div></div>
+        <div class="center-card"><span class="center-ico">🏥</span><div class="center-info"><h4>مركز دم هيت</h4><p>هيت – مستشفى هيت العام</p><p>📞 07809012345</p></div></div>
+      </div>
+    </div>`;
+  // تحديث عنوان حالة المتبرع
+  const st=document.getElementById('donateStatusTitle');
+  if(st) st.textContent=DL.statusTitle;
+}
+
 function renderDonateStatus(){
+  const L=LANGS[curLang]||LANGS.ar;
   const el=document.getElementById('donateUserStatus');
   if(!el) return;
   if(!currentUser){
-    el.innerHTML=`<p style="color:var(--gray)">يرجى تسجيل الدخول لعرض حالتك.</p>`;
+    el.innerHTML=`<p style="color:var(--gray)">${L.loginTab}</p>`;
     return;
   }
+  const changeLabel={ar:'تغيير الحالة',en:'Change Status',ku:'گۆڕینی دۆخ'}[curLang]||'تغيير الحالة';
+  const notDonorLabel={ar:'لم تسجّل كمتبرع بعد.\nانضم الآن وساهم في إنقاذ حياة!',en:"You're not registered as a donor yet.\nJoin now and help save lives!",ku:'هێشتا وەک بەخشەر تۆمار نەکراوی.\nئێستا بەشداربە و ژیانێک ڕێزبکە!'}[curLang]||'';
   if(currentUser.isDonor){
     el.innerHTML=`
       <div style="display:flex;align-items:center;gap:16px;padding:16px;background:#fff5f5;border-radius:12px;border:2px solid #FFCDD2;flex-wrap:wrap">
@@ -3099,11 +3567,11 @@ function renderDonateStatus(){
           <div style="color:var(--red);font-weight:900;font-size:20px">${currentUser.blood}</div>
           <div style="font-size:13px;color:var(--gray);margin-top:4px">${currentUser.gov} – ${currentUser.region||''}</div>
           <div style="margin-top:8px;font-weight:700;color:${currentUser.avail?'var(--green)':'var(--gray)'}">
-            ${currentUser.avail?'✅ متاح للتبرع الآن':'⏳ غير متاح حالياً'}
+            ${currentUser.avail?L.available:L.notAvailable}
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
-          <span style="font-size:13px;color:var(--gray)">تغيير الحالة</span>
+          <span style="font-size:13px;color:var(--gray)">${changeLabel}</span>
           <input type="checkbox" ${currentUser.avail?'checked':''} onchange="toggleAvailDonate(this.checked)"
             style="width:26px;height:26px;accent-color:var(--red);cursor:pointer">
         </div>
@@ -3112,8 +3580,8 @@ function renderDonateStatus(){
     el.innerHTML=`
       <div style="text-align:center;padding:20px">
         <div style="font-size:60px;margin-bottom:12px">🩸</div>
-        <p style="color:var(--gray);margin-bottom:16px;font-size:15px">لم تسجّل كمتبرع بعد.<br>انضم الآن وساهم في إنقاذ حياة!</p>
-        <button class="btn btn-red" onclick="regDonorDonate()" style="font-size:15px;padding:12px 30px">❤️ سجّل كمتبرع الآن</button>
+        <p style="color:var(--gray);margin-bottom:16px;font-size:15px;white-space:pre-line">${notDonorLabel}</p>
+        <button class="btn btn-red" onclick="regDonorDonate()" style="font-size:15px;padding:12px 30px">${L.registerDonor}</button>
       </div>`;
   }
 }
@@ -3234,7 +3702,7 @@ function saveReqEdit(){
 <!-- Modal Language -->
 <div class="modal" id="mLang">
   <div class="mbox" style="max-width:340px">
-    <div class="mhead"><h3>🌐 اختيار اللغة</h3><button class="mclose" onclick="closeModal('mLang')">×</button></div>
+    <div class="mhead"><h3 data-i18n="langModalTitle">🌐 اختيار اللغة</h3><button class="mclose" onclick="closeModal('mLang')">×</button></div>
     <div class="mbody" id="langModalBody"></div>
   </div>
 </div>
@@ -3242,24 +3710,24 @@ function saveReqEdit(){
 <!-- Modal About -->
 <div class="modal" id="mAbout">
   <div class="mbox" style="max-width:400px">
-    <div class="mhead" style="background:linear-gradient(135deg,#1A237E,#283593)"><h3>ℹ️ عن التطبيق</h3><button class="mclose" onclick="closeModal('mAbout')">×</button></div>
+    <div class="mhead" style="background:linear-gradient(135deg,#1A237E,#283593)"><h3 data-i18n="aboutModalTitle">ℹ️ عن التطبيق</h3><button class="mclose" onclick="closeModal('mAbout')">×</button></div>
     <div class="mbody" style="text-align:center">
       <div style="font-size:60px;margin-bottom:10px">🩸</div>
       <div style="font-size:22px;font-weight:900;color:#C62828;margin-bottom:4px">Lifeline</div>
-      <div style="font-size:13px;color:#666;margin-bottom:20px">تطبيق التبرع بالدم في العراق</div>
+      <div style="font-size:13px;color:#666;margin-bottom:20px" data-i18n="aboutSub">تطبيق التبرع بالدم في العراق</div>
       <div style="background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:12px;padding:16px;margin-bottom:14px;text-align:right">
-        <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:8px">🎓 جامعة الأنبار</div>
-        <div style="font-size:13px;color:#1976D2;line-height:2">كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات – 2026</div>
+        <div style="font-size:13px;font-weight:800;color:#1565C0;margin-bottom:8px" data-i18n="aboutUni">🎓 جامعة الأنبار</div>
+        <div style="font-size:13px;color:#1976D2;line-height:2" data-i18n="aboutCollege">كلية علوم الحاسوب وتكنولوجيا المعلومات<br>قسم نظم المعلومات – 2026</div>
       </div>
       <div style="background:#FFF5F5;border-radius:12px;padding:14px;text-align:right">
-        <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:10px">👩‍💻 إعداد الطالبات</div>
+        <div style="font-size:13px;font-weight:800;color:#C62828;margin-bottom:10px" data-i18n="aboutStudents">👩‍💻 إعداد الطالبات</div>
         <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:10px;margin-bottom:8px">
           <div style="width:34px;height:34px;border-radius:50%;background:#C62828;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0">أ</div>
-          <div><div style="font-weight:800;font-size:13px">أفنان طه عفين</div><div style="font-size:11px;color:#666">مديرة التطبيق</div></div>
+          <div><div style="font-weight:800;font-size:13px">أفنان طه عفين</div><div style="font-size:11px;color:#666" data-i18n="adminRole">مديرة التطبيق</div></div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:8px;padding:10px">
           <div style="width:34px;height:34px;border-radius:50%;background:#2E7D32;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex-shrink:0">ط</div>
-          <div><div style="font-weight:800;font-size:13px">طيبة سفيان أسعد</div><div style="font-size:11px;color:#666">مديرة التطبيق 2</div></div>
+          <div><div style="font-weight:800;font-size:13px">طيبة سفيان أسعد</div><div style="font-size:11px;color:#666" data-i18n="admin2Role">مديرة التطبيق 2</div></div>
         </div>
       </div>
     </div>
@@ -3269,6 +3737,7 @@ function saveReqEdit(){
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 <script>
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
