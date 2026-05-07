@@ -1206,7 +1206,7 @@ function startPubChatListener(){
 // ══ مراقبة الرسائل الخاصة في الوقت الحقيقي ══
 function startPvtListener(roomId){
   if(!_db || !roomId) return;
-  if(_unsubPvt[roomId]) return; // مراقب بالفعل
+  if(_unsubPvt[roomId]) return;
   _unsubPvt[roomId] = _db.collection('pvtRooms').doc(roomId).collection('msgs')
     .orderBy('timeMs', 'asc')
     .limitToLast(100)
@@ -1214,28 +1214,37 @@ function startPvtListener(roomId){
       pvtMsgs[roomId] = [];
       snap.forEach(d => {
         const data = d.data();
-        pvtMsgs[roomId].push({id:d.id, sid:data.sid, txt:data.txt, time:new Date(data.timeMs||Date.now())});
+        // نحفظ sname مع الرسالة لعرضها صح
+        const senderUser = users.find(u=>u.id===data.sid);
+        const sname = data.sname || (senderUser?senderUser.name:(data.sid==='admin'?ADMIN.name:'مستخدم'));
+        pvtMsgs[roomId].push({
+          id:d.id, sid:data.sid, sname,
+          txt:data.txt, time:new Date(data.timeMs||Date.now())
+        });
       });
       saveData();
+      const last = pvtMsgs[roomId]?.slice(-1)[0];
+      const isFromOther = last && last.sid !== currentUser?.id;
       if(currentRoom === roomId){
         renderPvt();
-        // إشعار إذا الرسالة من شخص آخر
-        const last = pvtMsgs[roomId]?.slice(-1)[0];
-        if(last && last.sid !== currentUser?.id){
-          addNotification(`رسالة جديدة من ${(users.find(u=>u.id===last.sid)||{name:'مستخدم'}).name}: ${last.txt.substring(0,40)}`, '💬');
+        if(isFromOther){
+          addNotification(`💬 ${last.sname}: ${last.txt.substring(0,40)}`, '💬');
         }
       } else {
-        // غرفة مش مفتوحة - نحدث عداد الرسائل غير المقروءة
         const r = rooms.find(x=>x.id===roomId);
-        const last = pvtMsgs[roomId]?.slice(-1)[0];
-        if(r && last && last.sid !== currentUser?.id){
+        if(r && isFromOther){
           r.unread = (r.unread||0)+1;
           r.last = last.txt;
           saveData();
+          // إشعار متصفح حتى لو التطبيق في الخلفية
+          if(Notification.permission==='granted'){
+            try{ new Notification('💬 Lifeline', {body:`${last.sname}: ${last.txt.substring(0,60)}`, icon:'./icon-192.png', tag:roomId}); }catch(e){}
+          }
+          addNotification(`💬 ${last.sname}: ${last.txt.substring(0,40)}`, '💬');
           if(document.getElementById('pvtChat')?.style.display==='block') renderRooms();
         }
       }
-    }, ()=>{});
+    }, (err)=>{ console.log('pvt listener error:', err); });
 }
 
 // ══ مراقبة الإشعارات من Firebase (مُصلَحة) ══
@@ -1291,6 +1300,23 @@ function fbNotify(toId, msg, ico='🔔'){
   _db.collection('notifications').add({
     toId, msg, ico, read: false, timeMs: Date.now()
   }).catch(()=>{});
+}
+
+// إشعار لجميع المستخدمين المسجّلين (للأحداث العامة)
+function notifyAllUsers(msg, ico='🔔'){
+  if(!_db) return;
+  // إشعار متصفح محلي
+  if(Notification.permission==='granted'){
+    try{ new Notification('🩸 Lifeline', {body:msg, icon:'./icon-192.png', requireInteraction:false}); }catch(e){}
+  }
+  addNotification(msg, ico);
+  // إشعار Firebase لكل المستخدمين المعروفين
+  users.filter(u=>u.id && u.id!==currentUser?.id).forEach(u=>{
+    fbNotify(u.id, msg, ico);
+  });
+  // وللمديرين دائماً
+  fbNotify('admin', msg, ico);
+  fbNotify('assistant', msg, ico);
 }
 
 // ══════════════════════════════════════════════════════
@@ -1406,32 +1432,70 @@ function switchLTab(tab,el){
 }
 
 function doLogin(){
-  const email=document.getElementById('lEmail').value.trim();
-  const pass=document.getElementById('lPass').value;
+  const email=document.getElementById('lEmail').value.trim().toLowerCase();
+  const pass=document.getElementById('lPass').value.trim();
   const errEl=document.getElementById('loginErr');
   errEl.style.display='none';
 
-  // تحقق من المديرة
-  if(email===ADMIN.email && pass===ADMIN.pass){
-    currentUser={id:'admin',name:ADMIN.name,email:ADMIN.email,isAdmin:true,isAssistant:false,blood:'O+',gov:'الأنبار',region:'الرمادي الكورنيش',approved:true,isDonor:false,avail:false,lat:33.4236,lng:43.2984};
-    launchApp();return;
+  if(!email||!pass){errEl.textContent='❌ يرجى إدخال البريد الإلكتروني وكلمة المرور';errEl.style.display='block';return;}
+
+  // تحقق من المديرة (غير حساس لحالة الأحرف)
+  if(email===ADMIN.email.toLowerCase() && pass===ADMIN.pass){
+    currentUser={id:'admin',name:ADMIN.name,email:ADMIN.email,isAdmin:true,isAssistant:false,
+      blood:'O+',gov:'الأنبار',region:'الرمادي الكورنيش',approved:true,isDonor:true,avail:true,lat:33.4236,lng:43.2984};
+    saveData();launchApp();return;
   }
 
-  // تحقق من مساعدة المديرة
-  if(email===ASSISTANT.email && pass===ASSISTANT.pass){
-    currentUser={id:'assistant',name:ASSISTANT.name,email:ASSISTANT.email,isAdmin:true,isAssistant:false,blood:'O+',gov:'الأنبار',region:'الرمادي',approved:true,isDonor:false,avail:false,lat:33.4236,lng:43.2984};
-    launchApp();return;
+  // تحقق من المديرة 2
+  if(email===ASSISTANT.email.toLowerCase() && pass===ASSISTANT.pass){
+    currentUser={id:'assistant',name:ASSISTANT.name,email:ASSISTANT.email,isAdmin:true,isAssistant:true,
+      blood:'O+',gov:'الأنبار',region:'الرمادي',approved:true,isDonor:true,avail:true,lat:33.4236,lng:43.2984};
+    saveData();launchApp();return;
   }
 
-  // بحث في المستخدمين
-  let u=users.find(x=>x.email===email);
+  // بحث في المستخدمين المحليين
+  let u=users.find(x=>x.email&&x.email.trim().toLowerCase()===email);
+
+  if(!u && _db){
+    // محاولة البحث في Firebase
+    errEl.textContent='⏳ جاري التحقق...';errEl.style.display='block';
+    _db.collection('users').where('email','==',email).limit(1).get().then(snap=>{
+      errEl.style.display='none';
+      if(snap.empty){
+        // تحقق بدون lowercase
+        return _db.collection('users').get().then(all=>{
+          let found=null;
+          all.forEach(d=>{const d2=d.data();if(d2.email&&d2.email.trim().toLowerCase()===email) found={...d2,id:d.id};});
+          if(!found){errEl.textContent='❌ ليس لديك حساب – يرجى التسجيل أولاً';errEl.style.display='block';return;}
+          doLoginWithUser(found, pass, errEl);
+        });
+      }
+      const data=snap.docs[0].data();const id=snap.docs[0].id;
+      doLoginWithUser({...data,id}, pass, errEl);
+    }).catch(()=>{
+      errEl.textContent='❌ خطأ في الاتصال – تحقق من الإنترنت';errEl.style.display='block';
+    });
+    return;
+  }
+
   if(!u){errEl.textContent='❌ ليس لديك حساب – يرجى التسجيل أولاً';errEl.style.display='block';return;}
-  if(u.pass && u.pass!==pass){errEl.textContent='❌ كلمة المرور غير صحيحة';errEl.style.display='block';return;}
+  doLoginWithUser(u, pass, errEl);
+}
+
+function doLoginWithUser(u, pass, errEl){
+  if(u.pass && u.pass.trim()!==pass.trim()){
+    errEl.textContent='❌ كلمة المرور غير صحيحة';errEl.style.display='block';return;
+  }
   if(!u.approved){
     errEl.innerHTML='🚫 <b>لم يتم قبول حسابك بعد</b><br><span style="font-size:12px">حسابك قيد المراجعة من قبل المديرة أفنان طه عفين.<br>انتظر الموافقة ثم حاول الدخول مجدداً.</span>';
     errEl.style.display='block';return;
   }
-  currentUser=u; launchApp();
+  // تحديث المستخدم في القائمة المحلية
+  const idx=users.findIndex(x=>x.id===u.id);
+  if(idx===-1) users.push(u); else users[idx]=u;
+  currentUser=u;
+  saveData();
+  launchApp();
 }
 
 function doRegister(){
@@ -1481,6 +1545,8 @@ function doRegister(){
 function launchApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
+  // حفظ الجلسة تلقائياً
+  saveSession();
 
   document.getElementById('navAvatar').textContent=currentUser.name[0];
   document.getElementById('navName').textContent=currentUser.name;
@@ -1677,13 +1743,21 @@ function renderMap(type){
   if(type==='requests'||type==='all'){
     requests.filter(r=>r.lat&&r.lng&&r.status!=='Completed').forEach(r=>{
       const c=r.urg==='Critical'?'#B71C1C':r.urg==='High'?'#BF360C':r.urg==='Medium'?'#1565C0':'#757575';
+      const urgLabel=urgAr(r.urg);
       const marker=L.marker([r.lat,r.lng],{icon:makeMarkerIcon(r.blood,c,44)}).addTo(mapObj);
       marker.bindPopup(`
-        <div style="direction:rtl;text-align:right;min-width:180px;font-family:Segoe UI,Arial">
-          <b style="font-size:15px">🆘 طلب دم ${r.blood}</b><br>
-          🏥 ${r.hosp}<br>📍 ${r.gov} – ${r.region}<br>
-          <span style="color:${c};font-weight:800">⚡ ${urgAr(r.urg)}</span>
-          ${r.notes?`<br>📝 ${r.notes}`:''}
+        <div style="direction:rtl;text-align:right;min-width:200px;font-family:Segoe UI,Arial;padding:4px">
+          <div style="font-size:16px;font-weight:800;color:${c};margin-bottom:6px">🆘 طلب دم ${r.blood}</div>
+          <div style="font-size:13px;margin-bottom:3px">👤 <b>${r.uname}</b></div>
+          <div style="font-size:12px;margin-bottom:3px">🏥 ${r.hosp}</div>
+          <div style="font-size:12px;margin-bottom:3px">📍 ${r.gov}${r.region?' – '+r.region:''}</div>
+          <div style="font-size:12px;margin-bottom:3px">⚡ <span style="color:${c};font-weight:700">${urgLabel}</span></div>
+          ${r.notes?`<div style="font-size:11px;color:#555;margin-bottom:3px">📝 ${r.notes}</div>`:''}
+          <div style="font-size:11px;color:#888;margin-bottom:8px">🕐 ${r.date?new Date(r.date).toLocaleDateString('ar-IQ'):'—'}</div>
+          ${currentUser&&currentUser.id!==r.uid?
+            `<button onclick="startChat('${r.uid}');document.querySelector('.leaflet-popup-close-button')?.click()"
+              style="background:#C62828;color:#fff;border:none;border-radius:8px;padding:6px 14px;
+              cursor:pointer;font-size:12px;width:100%">💬 تواصل مع الطالب</button>`:''}
         </div>`);
       mapMarkers.push(marker);count++;
     });
@@ -1869,15 +1943,14 @@ function submitReq(){
   if(mapObj) renderMap('all');
   addNotification(`🆘 طلب دم ${blood} جديد في ${gov} – ${urgAr(selUrg)}`,'🩸');
   if(_db){
-    // إشعار لجميع المتبرعين المتاحين من نفس المحافظة
+    // إشعار لجميع المستخدمين بطلب الدم الجديد
+    notifyAllUsers(`🆘 طلب دم ${blood} عاجل في ${gov} من ${currentUser.name} – ${urgAr(selUrg)}`, '🩸');
+    // إشعار خاص للمتبرعين المتاحين المتوافقين
     users.filter(u=>u.isDonor&&u.avail&&u.gov===gov&&u.id!==currentUser.id&&u.approved).forEach(u=>{
-      fbNotify(u.id, `🆘 طلب ${blood} عاجل في ${gov} – ${urgAr(selUrg)}`, '🩸');
+      fbNotify(u.id, `🆘 طلب ${blood} عاجل قريب منك في ${gov} – أنت متوافق!`, '🩸');
     });
-    // إشعار للمديرة
-    fbNotify('admin', `طلب دم ${blood} جديد من ${currentUser.name} في ${gov}`, '🆘');
-    fbNotify('assistant', `طلب دم ${blood} جديد من ${currentUser.name} في ${gov}`, '🆘');
     // حفظ الطلب في Firebase
-    fbSave('requests', requests[requests.length-1].id, requests[requests.length-1]);
+    fbSave('requests', requests[0].id, requests[0]);
   }
   showAlert('✅ تم إرسال الطلب – سيتم إشعار المتبرعين','s');
   showBadge('🆘','تم إرسال طلب الدم!','سيتم إشعار المتبرعين المتاحين قريباً',3000);
@@ -2094,12 +2167,36 @@ function renderPubChat(){
   if(!pubMsgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">${L.noMsgs}</p>`;return;}
   el.innerHTML=pubMsgs.map(m=>{
     const me=currentUser&&m.sid===currentUser.id;
-    return `<div class="msg ${me?'me':'other'}">
+    const canDel=me||(currentUser?.isAdmin);
+    return `<div class="msg ${me?'me':'other'}" id="pmsg_${m.id}" style="position:relative">
       ${!me?`<div class="msndr">${m.sname}</div>`:''}
       <div class="mbub">${m.txt}<div class="mtime">${fmtTime(m.time)}</div></div>
+      ${canDel?`<button onclick="deletePubMsg('${m.id}')" title="${curLang==='en'?'Delete':'حذف'}"
+        style="position:absolute;${me?'left':'right'}:-8px;top:-8px;background:#ef5350;border:none;border-radius:50%;
+        width:22px;height:22px;color:#fff;font-size:11px;cursor:pointer;display:none;align-items:center;
+        justify-content:center;line-height:1;z-index:10" class="del-btn">✕</button>`:''}
     </div>`;
   }).join('');
+  // إظهار زر الحذف عند المرور
+  el.querySelectorAll('.msg').forEach(div=>{
+    const btn=div.querySelector('.del-btn');
+    if(btn){
+      div.onmouseenter=()=>btn.style.display='flex';
+      div.onmouseleave=()=>btn.style.display='none';
+    }
+  });
   el.scrollTop=el.scrollHeight;
+}
+
+function deletePubMsg(msgId){
+  const L=LANGS[curLang]||LANGS.ar;
+  if(!confirm(curLang==='en'?'Delete this message?':'هل تريد حذف هذه الرسالة؟')) return;
+  // حذف من الذاكرة
+  pubMsgs=pubMsgs.filter(m=>m.id!==msgId);
+  saveData();
+  renderPubChat();
+  // حذف من Firebase
+  if(_db) _db.collection('pubMsgs').doc(msgId).delete().catch(()=>{});
 }
 
 function startChat(uid){
@@ -2208,20 +2305,23 @@ function sendPvt(){
   const inp=document.getElementById('pvtIn');
   const txt=inp.value.trim();if(!txt) return;
   inp.value='';
-  const msgId='pv_'+Date.now();
-  const msgData={id:msgId,sid:currentUser.id,txt,timeMs:Date.now()};
+  const msgId='pv_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+  const msgData={id:msgId, sid:currentUser.id, sname:currentUser.name, txt, timeMs:Date.now()};
   pvtMsgs[currentRoom]=pvtMsgs[currentRoom]||[];
-  pvtMsgs[currentRoom].push({...msgData,time:new Date()});
+  pvtMsgs[currentRoom].push({...msgData, time:new Date()});
   const r=rooms.find(x=>x.id===currentRoom);
   if(r){r.last=txt; saveData();}
   renderPvt();
-  // حفظ في Firebase
   if(_db){
     _db.collection('pvtRooms').doc(currentRoom).collection('msgs').doc(msgId).set(msgData).catch(()=>{});
-    // إرسال إشعار للطرف الآخر
+    // إشعار للطرف الآخر عبر Firebase
     const otherId = r?r.mids.find(x=>x!==currentUser.id):null;
-    if(otherId){
-      fbNotify(otherId, `${currentUser.name}: ${txt.substring(0,40)}`, '💬');
+    if(otherId && otherId!=='admin'){
+      fbNotify(otherId, `💬 ${currentUser.name}: ${txt.substring(0,50)}`, '💬');
+    }
+    if(otherId==='admin' || currentUser.isAdmin){
+      const adminId = currentUser.isAdmin ? r?.mids.find(x=>x!=='admin') : 'admin';
+      if(adminId) fbNotify(adminId, `💬 ${currentUser.name}: ${txt.substring(0,50)}`, '💬');
     }
   }
 }
@@ -2232,21 +2332,43 @@ function renderPvt(){
   const el=document.getElementById('pvtMsgs');
   if(!msgs.length){el.innerHTML=`<p style="color:var(--gray);text-align:center;padding:40px">${L.startConvo}</p>`;return;}
   el.innerHTML=msgs.map(m=>{
-    const me=m.sid===currentUser.id;
+    const me=m.sid===currentUser?.id;
+    const canDel=me||(currentUser?.isAdmin);
     const senderName=m.sid==='admin'?`${ADMIN.name}`:
-      (users.find(u=>u.id===m.sid)||{name:'مستخدم'}).name;
+      (users.find(u=>u.id===m.sid)||{name:m.sname||'مستخدم'}).name;
     if(m.isSystem){
       return `<div style="background:#FFF8E1;border-radius:10px;padding:10px 14px;margin-bottom:10px;
-        font-size:12px;color:#795548;border-right:3px solid var(--gold);white-space:pre-wrap">${m.txt}<div class="mtime" style="opacity:.5;font-size:10px;margin-top:4px">${fmtTime(m.time)}</div></div>`;
+        font-size:12px;color:#795548;border-right:3px solid var(--gold);white-space:pre-wrap">${m.txt}
+        <div class="mtime" style="opacity:.5;font-size:10px;margin-top:4px">${fmtTime(m.time)}</div></div>`;
     }
-    return `<div class="msg ${me?'me':'other'}">
+    return `<div class="msg ${me?'me':'other'}" id="pvmsg_${m.id}" style="position:relative">
       ${!me?`<div class="msndr" style="color:${m.sid==='admin'?'var(--gold)':'var(--gray)'}">${senderName}</div>`:''}
       <div class="mbub" style="${m.sid==='admin'?'background:linear-gradient(135deg,#F9A825,#FFB300);color:#333':''}">
         ${m.txt}<div class="mtime">${fmtTime(m.time)}</div>
       </div>
+      ${canDel?`<button onclick="deletePvtMsg('${m.id}')"
+        style="position:absolute;${me?'left':'right'}:-8px;top:-8px;background:#ef5350;border:none;
+        border-radius:50%;width:22px;height:22px;color:#fff;font-size:11px;cursor:pointer;
+        display:none;align-items:center;justify-content:center;line-height:1;z-index:10" class="del-btn">✕</button>`:''}
     </div>`;
   }).join('');
+  el.querySelectorAll('.msg').forEach(div=>{
+    const btn=div.querySelector('.del-btn');
+    if(btn){
+      div.onmouseenter=()=>btn.style.display='flex';
+      div.onmouseleave=()=>btn.style.display='none';
+    }
+  });
   el.scrollTop=el.scrollHeight;
+}
+
+function deletePvtMsg(msgId){
+  if(!currentRoom) return;
+  if(!confirm(curLang==='en'?'Delete this message?':'هل تريد حذف هذه الرسالة؟')) return;
+  pvtMsgs[currentRoom]=(pvtMsgs[currentRoom]||[]).filter(m=>m.id!==msgId);
+  saveData();
+  renderPvt();
+  if(_db) _db.collection('pvtRooms').doc(currentRoom).collection('msgs').doc(msgId).delete().catch(()=>{});
 }
 
 // ══════════════════════════════════════════════════════
@@ -2497,14 +2619,15 @@ function checkAutoLogin(){
   try{
     const s=JSON.parse(localStorage.getItem('ll_session')||'null');
     if(!s) return false;
-    // صالح لـ 30 يوم
     if(Date.now()-s.savedAt > 30*24*60*60*1000){clearSession();return false;}
     if(s.id==='admin'){
-      currentUser={id:'admin',name:ADMIN.name,email:ADMIN.email,isAdmin:true,isAssistant:false,blood:'O+',gov:'الأنبار',region:'الرمادي الكورنيش',approved:true,isDonor:false,avail:false,lat:33.4236,lng:43.2984};
+      currentUser={id:'admin',name:ADMIN.name,email:ADMIN.email,isAdmin:true,isAssistant:false,
+        blood:'O+',gov:'الأنبار',region:'الرمادي الكورنيش',approved:true,isDonor:true,avail:true,lat:33.4236,lng:43.2984};
       return true;
     }
     if(s.id==='assistant'){
-      currentUser={id:'assistant',name:ASSISTANT.name,email:ASSISTANT.email,isAdmin:true,isAssistant:false,blood:'O+',gov:'الأنبار',region:'الرمادي',approved:true,isDonor:false,avail:false,lat:33.4236,lng:43.2984};
+      currentUser={id:'assistant',name:ASSISTANT.name,email:ASSISTANT.email,isAdmin:true,isAssistant:true,
+        blood:'O+',gov:'الأنبار',region:'الرمادي',approved:true,isDonor:true,avail:true,lat:33.4236,lng:43.2984};
       return true;
     }
     const u=users.find(x=>x.id===s.id&&x.approved);
@@ -3066,6 +3189,21 @@ function applyLang(code){
   if(typeof renderReqList==='function') renderReqList();
   if(typeof renderLatest==='function') renderLatest();
   if(typeof renderHealthCards==='function' && document.getElementById('healthCards')) renderHealthCards();
+  if(typeof renderRooms==='function' && document.getElementById('roomList')) renderRooms();
+  if(typeof renderProfile==='function' && document.getElementById('profileContent')) renderProfile();
+  if(typeof renderDonatePage==='function' && document.getElementById('donatePageContent')) renderDonatePage();
+  if(typeof renderDonateStatus==='function') renderDonateStatus();
+  if(typeof renderAdminPage==='function' && currentUser?.isAdmin) renderAdminPage();
+  if(typeof buildBloodGrid==='function') buildBloodGrid();
+  // تحديث عنوان النافذة الحالية المفتوحة
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(L[key]!==undefined) el.textContent=L[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key=el.getAttribute('data-i18n-ph');
+    if(L[key]!==undefined) el.placeholder=L[key];
+  });
 }
 
 function openLangM(){
@@ -3351,8 +3489,9 @@ function submitDonorReg(){
     if(u) Object.assign(u,{isDonor:true,avail:true,age:+age,weight:+weight,blood,gov,region:reg,phone,donorInfo:currentUser.donorInfo});
   }
 
-  // إشعار للمديرة
+  // إشعار للمديرة وللكل
   addNotification(`🩸 ${name} سجّل كمتبرع جديد – ${blood} – ${gov}`,'❤️');
+  if(_db) notifyAllUsers(`❤️ متبرع جديد انضم! ${name} – فصيلة ${blood} في ${gov}`, '❤️');
 
   // إرسال رسالة تلقائية للمديرة
   const adminRoomId=['admin', currentUser.id].sort().join('_');
