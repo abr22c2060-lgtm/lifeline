@@ -2168,24 +2168,68 @@ function renderPubChat(){
   el.innerHTML=pubMsgs.map(m=>{
     const me=currentUser&&m.sid===currentUser.id;
     const canDel=me||(currentUser?.isAdmin);
-    return `<div class="msg ${me?'me':'other'}" id="pmsg_${m.id}" style="position:relative">
+    return `<div class="msg ${me?'me':'other'}" id="pmsg_${m.id}"
+      ${canDel?`oncontextmenu="showMsgMenu('${m.id}','pub',event);return false;"
+      ontouchstart="startLongPress('${m.id}','pub',event)" ontouchend="cancelLongPress()" ontouchmove="cancelLongPress()"
+      onmousedown="startLongPress('${m.id}','pub',event)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()"
+      style="cursor:pointer;user-select:none"`:''}> 
       ${!me?`<div class="msndr">${m.sname}</div>`:''}
       <div class="mbub">${m.txt}<div class="mtime">${fmtTime(m.time)}</div></div>
-      ${canDel?`<button onclick="deletePubMsg('${m.id}')" title="${curLang==='en'?'Delete':'حذف'}"
-        style="position:absolute;${me?'left':'right'}:-8px;top:-8px;background:#ef5350;border:none;border-radius:50%;
-        width:22px;height:22px;color:#fff;font-size:11px;cursor:pointer;display:none;align-items:center;
-        justify-content:center;line-height:1;z-index:10" class="del-btn">✕</button>`:''}
     </div>`;
   }).join('');
-  // إظهار زر الحذف عند المرور
-  el.querySelectorAll('.msg').forEach(div=>{
-    const btn=div.querySelector('.del-btn');
-    if(btn){
-      div.onmouseenter=()=>btn.style.display='flex';
-      div.onmouseleave=()=>btn.style.display='none';
-    }
-  });
   el.scrollTop=el.scrollHeight;
+}
+
+// ══ قائمة الحذف بالضغط الطويل ══
+let _lpTimer=null;
+let _lpMsgId=null;
+let _lpType=null;
+
+function startLongPress(msgId, type, e){
+  _lpMsgId=msgId; _lpType=type;
+  _lpTimer=setTimeout(()=>{ showMsgMenu(msgId, type, e); }, 600);
+}
+function cancelLongPress(){
+  if(_lpTimer){ clearTimeout(_lpTimer); _lpTimer=null; }
+}
+function showMsgMenu(msgId, type, e){
+  cancelLongPress();
+  // أزل أي قائمة قديمة
+  document.getElementById('msgCtxMenu')?.remove();
+
+  const isRtl = document.documentElement.dir==='rtl';
+  const menu=document.createElement('div');
+  menu.id='msgCtxMenu';
+  menu.innerHTML=`
+    <div style="background:rgba(0,0,0,.55);position:fixed;inset:0;z-index:9998" onclick="closeMsgMenu()"></div>
+    <div style="position:fixed;z-index:9999;background:#fff;border-radius:16px;
+      box-shadow:0 8px 32px rgba(0,0,0,.22);overflow:hidden;min-width:180px;
+      left:50%;top:50%;transform:translate(-50%,-50%)">
+      <div style="padding:14px 20px;font-size:13px;color:#888;border-bottom:1px solid #f0f0f0">
+        ${curLang==='en'?'Message options':'خيارات الرسالة'}
+      </div>
+      <button onclick="doDeleteMsg('${msgId}','${type}')"
+        style="display:flex;align-items:center;gap:12px;width:100%;padding:16px 20px;
+        border:none;background:none;color:#E53935;font-size:15px;font-weight:700;cursor:pointer;
+        font-family:inherit;direction:${isRtl?'rtl':'ltr'}">
+        🗑️ ${curLang==='en'?'Delete Message':'حذف الرسالة'}
+      </button>
+      <button onclick="closeMsgMenu()"
+        style="display:flex;align-items:center;gap:12px;width:100%;padding:16px 20px;
+        border:none;background:none;color:#555;font-size:15px;cursor:pointer;
+        font-family:inherit;border-top:1px solid #f0f0f0;direction:${isRtl?'rtl':'ltr'}">
+        ✕ ${curLang==='en'?'Cancel':'إلغاء'}
+      </button>
+    </div>`;
+  document.body.appendChild(menu);
+}
+function closeMsgMenu(){
+  document.getElementById('msgCtxMenu')?.remove();
+}
+function doDeleteMsg(msgId, type){
+  closeMsgMenu();
+  if(type==='pub') deletePubMsg(msgId);
+  else deletePvtMsg(msgId);
 }
 
 function deletePubMsg(msgId){
@@ -2341,24 +2385,17 @@ function renderPvt(){
         font-size:12px;color:#795548;border-right:3px solid var(--gold);white-space:pre-wrap">${m.txt}
         <div class="mtime" style="opacity:.5;font-size:10px;margin-top:4px">${fmtTime(m.time)}</div></div>`;
     }
-    return `<div class="msg ${me?'me':'other'}" id="pvmsg_${m.id}" style="position:relative">
+    return `<div class="msg ${me?'me':'other'}" id="pvmsg_${m.id}"
+      ${canDel?`oncontextmenu="showMsgMenu('${m.id}','pvt',event);return false;"
+      ontouchstart="startLongPress('${m.id}','pvt',event)" ontouchend="cancelLongPress()" ontouchmove="cancelLongPress()"
+      onmousedown="startLongPress('${m.id}','pvt',event)" onmouseup="cancelLongPress()" onmouseleave="cancelLongPress()"
+      style="cursor:pointer;user-select:none"`:''}>
       ${!me?`<div class="msndr" style="color:${m.sid==='admin'?'var(--gold)':'var(--gray)'}">${senderName}</div>`:''}
       <div class="mbub" style="${m.sid==='admin'?'background:linear-gradient(135deg,#F9A825,#FFB300);color:#333':''}">
         ${m.txt}<div class="mtime">${fmtTime(m.time)}</div>
       </div>
-      ${canDel?`<button onclick="deletePvtMsg('${m.id}')"
-        style="position:absolute;${me?'left':'right'}:-8px;top:-8px;background:#ef5350;border:none;
-        border-radius:50%;width:22px;height:22px;color:#fff;font-size:11px;cursor:pointer;
-        display:none;align-items:center;justify-content:center;line-height:1;z-index:10" class="del-btn">✕</button>`:''}
     </div>`;
   }).join('');
-  el.querySelectorAll('.msg').forEach(div=>{
-    const btn=div.querySelector('.del-btn');
-    if(btn){
-      div.onmouseenter=()=>btn.style.display='flex';
-      div.onmouseleave=()=>btn.style.display='none';
-    }
-  });
   el.scrollTop=el.scrollHeight;
 }
 
